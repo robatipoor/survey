@@ -16,8 +16,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .csrf()
         .disable()
-        .exceptionHandling()
-        .and()
         .authorizeRequests()
         .antMatchers(Constants.PUBLIC_ACCESS_API_LIST)
         .permitAll()
