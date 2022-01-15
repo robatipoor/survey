@@ -21,7 +21,7 @@ public class UserEntity extends DateAuditEntity {
   private String lastName;
 
   @Column(name = "username", nullable = false, unique = true)
-  private String userName;
+  private String username;
 
   @Column(name = "email", nullable = false, unique = true)
   private String email;
