@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Table(name = "surveys")
@@ -16,6 +17,10 @@ public class SurveyEntity extends DateAuditEntity {
 
   @Column(name = "title", nullable = false)
   private String title;
+
+  @NaturalId
+  @Column(nullable = false, unique = true)
+  private String slug;
 
   @ManyToOne
   @JoinColumn(name = "user_id")
