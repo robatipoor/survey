@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -24,13 +25,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final UserDetailsService userDetailsService;
   private final AuthenticationEntryPoint authenticationEntryPoint;
+  private final AuthorizationFilter authorizationFilter;
 
   @Autowired
   public WebSecurityConfig(
       @Qualifier("customUserDetailsServiceImpl") UserDetailsService userDetailsService,
-      AuthenticationEntryPoint authenticationEntryPoint) {
+      AuthenticationEntryPoint authenticationEntryPoint,
+      AuthorizationFilter authorizationFilter) {
     this.userDetailsService = userDetailsService;
     this.authenticationEntryPoint = authenticationEntryPoint;
+    this.authorizationFilter = authorizationFilter;
   }
 
   @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -70,5 +74,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http.addFilterAt(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
   }
 }
