@@ -4,6 +4,7 @@ public class Constants {
 
   public static final String BEARER_TOKEN_PREFIX = "Bearer ";
   public static final String AUTH_HEADER_NAME = "Authorization";
+  public static final String BEARER = "Bearer";
 
   // TODO just for local test
   public static final String[] LOCAL_ACCESS_API_LIST = {};
