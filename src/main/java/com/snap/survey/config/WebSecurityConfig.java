@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,17 +15,22 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final UserDetailsService userDetailsService;
+  private final AuthenticationEntryPoint authenticationEntryPoint;
 
   @Autowired
   public WebSecurityConfig(
-      @Qualifier("customUserDetailsServiceImpl") UserDetailsService userDetailsService) {
+      @Qualifier("customUserDetailsServiceImpl") UserDetailsService userDetailsService,
+      AuthenticationEntryPoint authenticationEntryPoint) {
     this.userDetailsService = userDetailsService;
+    this.authenticationEntryPoint = authenticationEntryPoint;
   }
 
   @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -49,6 +55,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .csrf()
         .disable()
+        .exceptionHandling()
+        .authenticationEntryPoint(authenticationEntryPoint)
+        .and()
         .authorizeRequests()
         .antMatchers(Constants.PUBLIC_ACCESS_API_LIST)
         .permitAll()
