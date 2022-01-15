@@ -13,7 +13,7 @@ public class MessageSourceConfig {
 
   @Bean
   public MessageSource messageSourceBean() {
-    ReloadableResourceBundleMessageSource resource = new ReloadableResourceBundleMessageSource();
+    var resource = new ReloadableResourceBundleMessageSource();
     resource.setBasename("classpath:/messages/messages");
     resource.setDefaultEncoding("UTF-8");
     resource.setCacheMillis(MESSAGE_CACHE_TTL);

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class DateUtil {
 
   public Date getExpireDateFromDurationHours(int durationHours) {
-    Calendar calendar = Calendar.getInstance();
+    var calendar = Calendar.getInstance();
     calendar.add(Calendar.HOUR, durationHours);
     return calendar.getTime();
   }

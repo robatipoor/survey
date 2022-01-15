@@ -44,12 +44,12 @@ public class TokenUtil {
   }
 
   public UserPrincipal getUserPrincipalFromToken(String token) {
-    Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    var claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     return userPrincipalMapper.toUserPrincipal(claims);
   }
 
   public Optional<String> getJwtTokenFromHttpServletRequest(HttpServletRequest request) {
-    String bearerToken = request.getHeader(Constants.AUTH_HEADER_NAME);
+    var bearerToken = request.getHeader(Constants.AUTH_HEADER_NAME);
     if (StringUtils.hasText(bearerToken)
         && bearerToken.startsWith(Constants.BEARER_TOKEN_PREFIX)
         && bearerToken.length() > Constants.BEARER_TOKEN_PREFIX.length()) {

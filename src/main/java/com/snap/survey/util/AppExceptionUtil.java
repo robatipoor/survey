@@ -20,8 +20,8 @@ public class AppExceptionUtil {
   }
 
   public AppException getAppException(String messageKey, String errorKey) {
-    String message = messageSource.getMessage(messageKey, null, defaultLocale);
-    int errorCode = Integer.parseInt(messageSource.getMessage(errorKey, null, defaultLocale));
+    var message = messageSource.getMessage(messageKey, null, defaultLocale);
+    var errorCode = Integer.parseInt(messageSource.getMessage(errorKey, null, defaultLocale));
     return new AppException(message, errorCode);
   }
 }

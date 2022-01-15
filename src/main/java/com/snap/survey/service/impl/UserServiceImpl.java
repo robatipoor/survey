@@ -1,7 +1,6 @@
 package com.snap.survey.service.impl;
 
 import com.snap.survey.config.Constants;
-import com.snap.survey.entity.RoleEntity;
 import com.snap.survey.entity.UserEntity;
 import com.snap.survey.mapper.UserMapper;
 import com.snap.survey.model.UserPrincipal;
@@ -18,7 +17,6 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -55,13 +53,13 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public LoginResponse loginUser(LoginRequest loginRequest) {
-    Authentication authentication =
+    var authentication =
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginRequest.usernameOrEmail(), loginRequest.password()));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     log.info("success user : {} login application ", loginRequest.usernameOrEmail());
-    String jwtToken = tokenUtil.generateToken((UserPrincipal) authentication.getPrincipal());
+    var jwtToken = tokenUtil.generateToken((UserPrincipal) authentication.getPrincipal());
     return new LoginResponse(jwtToken, Constants.BEARER);
   }
 
@@ -74,9 +72,9 @@ public class UserServiceImpl implements UserService {
           "email.or.username.already.exist.error.message",
           "email.or.username.already.exist.error.code");
     }
-    UserEntity user = createUserEntityFromRequest(registerRequest);
+    var user = createUserEntityFromRequest(registerRequest);
     try {
-      UserEntity result = userRepository.save(user);
+      var result = userRepository.save(user);
       log.info("success new register userId : {}", result.getId());
     } catch (Exception e) {
       log.error("register user failed exception error message : {}", e.getMessage());
@@ -87,9 +85,9 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserEntity createUserEntityFromRequest(RegisterRequest registerRequest) {
-    UserEntity user = userMapper.toEntity(registerRequest);
+    var user = userMapper.toEntity(registerRequest);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    RoleEntity role =
+    var role =
         roleRepository
             .findByRoleName(Role.ROLE_USER)
             .orElseThrow(

@@ -27,14 +27,14 @@ public class BaseResponseUtil {
   }
 
   public BaseResponse<Void> getResponse(String messageKey, String errorKey) {
-    String message = messageSource.getMessage(messageKey, null, defaultLocale);
-    Integer errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
+    var message = messageSource.getMessage(messageKey, null, defaultLocale);
+    var errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
     return new BaseResponse<>(errorCode, message, null);
   }
 
   public BaseResponse<Void> getResponse(String messageKey, Object[] args, String errorKey) {
-    String message = messageSource.getMessage(messageKey, args, defaultLocale);
-    Integer errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
+    var message = messageSource.getMessage(messageKey, args, defaultLocale);
+    var errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
     return new BaseResponse<>(errorCode, message, null);
   }
 
@@ -43,14 +43,14 @@ public class BaseResponseUtil {
   }
 
   public <T> BaseResponse<T> getResponse(String messageKey, String errorKey, T data) {
-    String message = messageSource.getMessage(messageKey, null, defaultLocale);
-    Integer errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
+    var message = messageSource.getMessage(messageKey, null, defaultLocale);
+    var errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
     return new BaseResponse<>(errorCode, message, data);
   }
 
   public String getResponseAsJson(String messageKey, String errorKey) {
-    String message = messageSource.getMessage(messageKey, null, defaultLocale);
-    Integer errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
+    var message = messageSource.getMessage(messageKey, null, defaultLocale);
+    var errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
     BaseResponse<Void> generalResponse = new BaseResponse<>(errorCode, message, null);
     try {
       return objectMapper.writeValueAsString(generalResponse);
