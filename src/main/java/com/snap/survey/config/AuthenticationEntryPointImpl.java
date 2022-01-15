@@ -1,15 +1,14 @@
 package com.snap.survey.config;
 
 import com.snap.survey.util.BaseResponseUtil;
+import java.io.IOException;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Component
 @Slf4j
@@ -34,7 +33,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
       HttpServletResponse httpServletResponse,
       AuthenticationException e)
       throws IOException {
-    log.error("responding with unauthorized error message : {}", e.getMessage());
+    log.error("unauthorized error message : {}", e.getMessage());
     httpServletResponse.setContentType("application/json");
     httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     httpServletResponse.getOutputStream().println(responseBody);
