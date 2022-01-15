@@ -19,7 +19,7 @@ public abstract class UserPrincipalMapper {
   public abstract UserPrincipal toUserPrincipal(UserEntity entity);
 
   @Named("rolesToAuthorities")
-  public Collection<? extends GrantedAuthority> toAuthorities(Set<RoleEntity> roles) {
+  public Collection<? extends GrantedAuthority> rolesToAuthorities(Set<RoleEntity> roles) {
     return roles.stream()
         .map(role -> new SimpleGrantedAuthority(role.getRoleName().toString()))
         .collect(Collectors.toList());

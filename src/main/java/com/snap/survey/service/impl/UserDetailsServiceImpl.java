@@ -3,7 +3,6 @@ package com.snap.survey.service.impl;
 import com.snap.survey.mapper.UserPrincipalMapper;
 import com.snap.survey.repository.UserRepository;
 import com.snap.survey.util.AppExceptionUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,8 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("CustomUserDetailsServiceImpl")
-@Slf4j
+@Service("customUserDetailsServiceImpl")
 @Transactional(readOnly = true)
 public class UserDetailsServiceImpl implements UserDetailsService {
 
