@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RequestMapping("/api/v1/survey")
 public class SurveyController {
+
   private final BaseResponseUtil baseResponseUtil;
 
   public SurveyController(BaseResponseUtil baseResponseUtil) {

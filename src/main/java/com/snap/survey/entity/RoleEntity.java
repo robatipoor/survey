@@ -13,9 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoleEntity {
-
-  @Id private Long id;
+public class RoleEntity extends BaseEntity {
 
   @Column(name = "name", updatable = false, unique = true)
   @Enumerated(EnumType.STRING)

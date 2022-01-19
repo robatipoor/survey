@@ -1,10 +1,7 @@
 package com.snap.survey.entity;
 
 import java.util.Objects;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +11,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public abstract class BaseEntity {
+  // TODO for security reason we can use uuid
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
