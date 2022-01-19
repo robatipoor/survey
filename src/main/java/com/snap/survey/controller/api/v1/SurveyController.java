@@ -9,22 +9,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/user")
-public class UserController {
+@RequestMapping("/api/v1/survey")
+public class SurveyController {
   private final BaseResponseUtil baseResponseUtil;
 
-  public UserController(BaseResponseUtil baseResponseUtil) {
+  public SurveyController(BaseResponseUtil baseResponseUtil) {
     this.baseResponseUtil = baseResponseUtil;
   }
 
-  @GetMapping("/login")
-  public ResponseEntity<BaseResponse<?>> login() {
+  @PostMapping("/create")
+  public ResponseEntity<BaseResponse<?>> create() {
     // TODO impl
     return null;
   }
 
-  @PostMapping("/register")
-  public ResponseEntity<BaseResponse<?>> register() {
+  @GetMapping
+  public ResponseEntity<BaseResponse<?>> read() {
+    // TODO impl
+    return null;
+  }
+
+  @GetMapping("/list")
+  public ResponseEntity<BaseResponse<?>> list() {
+    // TODO impl
+    return null;
+  }
+
+  @GetMapping("/result")
+  public ResponseEntity<BaseResponse<?>> result() {
+    // TODO impl
+    return null;
+  }
+
+  @PostMapping("/submit")
+  public ResponseEntity<BaseResponse<?>> submit() {
     // TODO impl
     return null;
   }

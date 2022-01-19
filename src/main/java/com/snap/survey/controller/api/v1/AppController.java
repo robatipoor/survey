@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
-public class BaseController {
+@RequestMapping("/api/v1/app")
+public class AppController {
 
   private final BaseResponseUtil baseResponseUtil;
 
-  public BaseController(BaseResponseUtil baseResponseUtil) {
+  public AppController(BaseResponseUtil baseResponseUtil) {
     this.baseResponseUtil = baseResponseUtil;
   }
 
