@@ -18,10 +18,6 @@ public class QuestionEntity extends DateAuditEntity {
   private String content;
 
   @ManyToOne
-  @JoinColumn(name = "question_type_id")
-  private QuestionTypeEntity questionType;
-
-  @ManyToOne
   @JoinColumn(name = "survey_id")
   private SurveyEntity survey;
 

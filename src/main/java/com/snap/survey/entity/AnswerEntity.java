@@ -28,4 +28,8 @@ public class AnswerEntity extends DateAuditEntity {
   @ManyToOne
   @JoinColumn(name = "question_id")
   private QuestionEntity question;
+
+  @ManyToOne
+  @JoinColumn(name = "survey_id")
+  private SurveyEntity survey;
 }

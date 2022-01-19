@@ -1,14 +1,21 @@
 package com.snap.survey.controller.api.v1;
 
+import com.snap.survey.model.request.CreateSurveyRequest;
+import com.snap.survey.model.request.SubmitSurveyRequest;
 import com.snap.survey.model.response.BaseResponse;
+import com.snap.survey.model.response.CreateSurveyResponse;
+import com.snap.survey.model.response.ResultSurveyResponse;
+import com.snap.survey.model.response.SurveyResponse;
 import com.snap.survey.util.BaseResponseUtil;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Validated
 @RequestMapping("/api/v1/survey")
 public class SurveyController {
   private final BaseResponseUtil baseResponseUtil;
@@ -18,31 +25,31 @@ public class SurveyController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<BaseResponse<?>> create() {
-    // TODO impl
-    return null;
-  }
-
-  @GetMapping
-  public ResponseEntity<BaseResponse<?>> read() {
+  // Role Admin
+  public ResponseEntity<BaseResponse<CreateSurveyResponse>> create(
+      @Valid @RequestBody CreateSurveyRequest request) {
     // TODO impl
     return null;
   }
 
   @GetMapping("/list")
-  public ResponseEntity<BaseResponse<?>> list() {
+  // Role Admin
+  public ResponseEntity<BaseResponse<Page<SurveyResponse>>> getPage() {
     // TODO impl
     return null;
   }
 
-  @GetMapping("/result")
-  public ResponseEntity<BaseResponse<?>> result() {
+  @GetMapping("/result/{slug}")
+  // Role Admin
+  public ResponseEntity<BaseResponse<ResultSurveyResponse>> getResult(
+      @NotEmpty @PathVariable String slug) {
     // TODO impl
     return null;
   }
 
-  @PostMapping("/submit")
-  public ResponseEntity<BaseResponse<?>> submit() {
+  @PostMapping("/submit/{slug}")
+  public ResponseEntity<BaseResponse<Void>> submit(
+      @Valid @RequestBody SubmitSurveyRequest request, @NotEmpty @PathVariable String slug) {
     // TODO impl
     return null;
   }
