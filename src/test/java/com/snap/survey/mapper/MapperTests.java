@@ -1,10 +1,9 @@
-package com.snap.survey;
+package com.snap.survey.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.snap.survey.entity.RoleEntity;
 import com.snap.survey.entity.UserEntity;
-import com.snap.survey.mapper.UserPrincipalMapper;
 import com.snap.survey.model.UserPrincipal;
 import com.snap.survey.model.enums.Role;
 import java.util.Set;
