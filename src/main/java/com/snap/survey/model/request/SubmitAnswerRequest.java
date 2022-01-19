@@ -1,4 +1,4 @@
-package com.snap.survey.model;
+package com.snap.survey.model.request;
 
 import javax.validation.constraints.NotEmpty;
 

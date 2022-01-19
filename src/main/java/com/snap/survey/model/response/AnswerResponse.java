@@ -1,6 +1,9 @@
 package com.snap.survey.model.response;
 
-import com.snap.survey.model.Choice;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record AnswerResponse(
-    String userCode, String questionCode, String answerCode, Choice choice) {}
+    @JsonProperty("user_code") String userCode,
+    @JsonProperty("question_code") String questionCode,
+    @JsonProperty("answer_code") String answerCode,
+    ChoiceResponse choice) {}
