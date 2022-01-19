@@ -12,3 +12,6 @@
 ## install git code format hook
 ./mvnw git-code-format:install-hooks
 ```
+## Entity Relationship Diagram
+
+![image info](./docs/entity_relationship_diagram.jpg)
