@@ -11,7 +11,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public abstract class BaseEntity {
-  // TODO for security reason we can use uuid
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;

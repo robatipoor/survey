@@ -15,3 +15,6 @@
 ## Entity Relationship Diagram
 
 ![image info](./docs/entity_relationship_diagram.jpg)
+
+## TODO list
+1 . for security reason we can use uuid instead of sequence number id

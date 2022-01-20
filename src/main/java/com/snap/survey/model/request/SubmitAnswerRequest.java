@@ -1,5 +1,8 @@
 package com.snap.survey.model.request;
 
-import javax.validation.constraints.NotEmpty;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
 
-public record SubmitAnswerRequest(@NotEmpty String questionCode, @NotEmpty String choiceCode) {}
+public record SubmitAnswerRequest(
+    @JsonProperty("question_id") @NotNull Long questionId,
+    @JsonProperty("choice_id") @NotNull Long choiceId) {}
