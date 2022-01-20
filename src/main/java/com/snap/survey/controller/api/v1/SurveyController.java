@@ -10,6 +10,7 @@ import com.snap.survey.util.BaseResponseUtil;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class SurveyController {
 
   @GetMapping("/list")
   // Role Admin
-  public ResponseEntity<BaseResponse<Page<SurveyResponse>>> getPage() {
+  public ResponseEntity<BaseResponse<Page<SurveyResponse>>> getPage(Pageable page) {
     // TODO impl
     return null;
   }
@@ -43,7 +44,7 @@ public class SurveyController {
   @GetMapping("/result/{slug}")
   // Role Admin
   public ResponseEntity<BaseResponse<ResultSurveyResponse>> getResult(
-      @NotEmpty @PathVariable String slug) {
+      @NotEmpty @PathVariable String slug, Pageable page) {
     // TODO impl
     return null;
   }

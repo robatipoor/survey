@@ -3,6 +3,7 @@ package com.snap.survey.controller.api.v1;
 import com.snap.survey.model.response.AnswerResponse;
 import com.snap.survey.model.response.BaseResponse;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +26,10 @@ public class AnswerController {
     return null;
   }
 
-  @GetMapping("/{code}")
+  @GetMapping("/{id}")
   // role admin
   public ResponseEntity<BaseResponse<AnswerResponse>> getOne(
-      @NotEmpty @PathVariable String code, Pageable page) {
+      @NotNull @PathVariable Long id, Pageable page) {
     // TODO impl
     return null;
   }
