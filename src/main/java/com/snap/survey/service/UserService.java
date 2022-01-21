@@ -6,6 +6,9 @@ import com.snap.survey.model.request.RegisterRequest;
 import com.snap.survey.model.response.LoginResponse;
 
 public interface UserService {
+
+  UserEntity getByUserId(Long userId);
+
   LoginResponse loginUser(LoginRequest loginRequest);
 
   void registerUser(RegisterRequest registerRequest);

@@ -52,6 +52,16 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public UserEntity getByUserId(Long userId) {
+    return userRepository
+        .findById(userId)
+        .orElseThrow(
+            () ->
+                appExceptionUtil.getAppException(
+                    "user.not.found.error.message", "user.not.found.error.code"));
+  }
+
+  @Override
   public LoginResponse loginUser(LoginRequest loginRequest) {
     var authentication =
         authenticationManager.authenticate(

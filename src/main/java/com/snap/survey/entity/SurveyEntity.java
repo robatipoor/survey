@@ -1,5 +1,6 @@
 package com.snap.survey.entity;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -24,7 +25,10 @@ public class SurveyEntity extends DateAuditEntity {
 
   @ManyToOne
   @JoinColumn(name = "user_id")
-  private UserEntity userEntity;
+  private UserEntity user;
+
+  @Column(name = "expire_date", nullable = false)
+  private Instant expireDate;
 
   @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
   private Set<QuestionEntity> questions = new HashSet<>();
