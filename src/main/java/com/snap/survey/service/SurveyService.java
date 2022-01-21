@@ -1,5 +1,6 @@
 package com.snap.survey.service;
 
+import com.snap.survey.entity.SurveyEntity;
 import com.snap.survey.model.request.CreateSurveyRequest;
 import com.snap.survey.model.request.SubmitSurveyRequest;
 import com.snap.survey.model.response.CreateSurveyResponse;
@@ -16,4 +17,6 @@ public interface SurveyService {
   ResultSurveyResponse getResult(Long userId, String slug, Pageable page);
 
   void submit(Long userId, String slug, SubmitSurveyRequest request);
+
+  void save(SurveyEntity survey);
 }

@@ -29,7 +29,7 @@ public class AnswerEntity extends DateAuditEntity {
   @JoinColumn(name = "question_id")
   private QuestionEntity question;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "survey_id")
   private SurveyEntity survey;
 }
