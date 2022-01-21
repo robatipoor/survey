@@ -4,6 +4,7 @@ import com.snap.survey.entity.ChoiceEntity;
 import com.snap.survey.repository.ChoiceRepository;
 import com.snap.survey.service.ChoiceService;
 import com.snap.survey.util.AppExceptionUtil;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,11 @@ public class ChoiceServiceImpl implements ChoiceService {
             () -> {
               return appExceptionUtil.getAppException("", "");
             });
+  }
+
+  @Override
+  public List<ChoiceEntity> getAllByQuestionId(Long questionId) {
+    return choiceRepository.findAllByQuestionId(questionId);
   }
 
   @Override

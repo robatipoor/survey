@@ -58,4 +58,8 @@ public class QuestionServiceImpl implements QuestionService {
   public boolean existsByQuestionIdAndSurvey(Long questionId, SurveyEntity survey) {
     return questionRepository.existsByIdAndSurvey(questionId, survey);
   }
+
+  public Page<QuestionEntity> getBySurveySlug(String surveySlug, Pageable page) {
+    return null;
+  }
 }

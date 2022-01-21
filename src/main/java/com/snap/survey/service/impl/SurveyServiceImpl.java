@@ -9,12 +9,8 @@ import com.snap.survey.model.request.SubmitSurveyRequest;
 import com.snap.survey.model.response.CreateSurveyResponse;
 import com.snap.survey.model.response.ResultSurveyResponse;
 import com.snap.survey.model.response.SurveyResponse;
-import com.snap.survey.repository.AnswerRepository;
 import com.snap.survey.repository.SurveyRepository;
-import com.snap.survey.service.ChoiceService;
-import com.snap.survey.service.QuestionService;
-import com.snap.survey.service.SurveyService;
-import com.snap.survey.service.UserService;
+import com.snap.survey.service.*;
 import com.snap.survey.util.AppExceptionUtil;
 import java.time.Instant;
 import java.util.UUID;
@@ -36,7 +32,7 @@ public class SurveyServiceImpl implements SurveyService {
   private final UserService userService;
   private final SurveyMapper surveyResponseMapper;
   private final AnswerMapper answerMapper;
-  private final AnswerRepository answerRepository;
+  private final AnswerService answerService;
 
   public SurveyServiceImpl(
       SurveyRepository surveyRepository,
@@ -47,7 +43,7 @@ public class SurveyServiceImpl implements SurveyService {
       UserService userService,
       SurveyMapper surveyResponseMapper,
       AnswerMapper answerMapper,
-      AnswerRepository answerRepository) {
+      AnswerService answerService) {
     this.surveyRepository = surveyRepository;
     this.questionMapper = questionMapper;
     this.questionService = questionService;
@@ -56,20 +52,20 @@ public class SurveyServiceImpl implements SurveyService {
     this.userService = userService;
     this.surveyResponseMapper = surveyResponseMapper;
     this.answerMapper = answerMapper;
-    this.answerRepository = answerRepository;
+    this.answerService = answerService;
   }
 
   @Transactional
   public CreateSurveyResponse create(Long userId, CreateSurveyRequest request) {
-    UserEntity user = userService.getByUserId(userId);
-    SurveyEntity survey = createSurveyEntity(request.title(), user);
+    var user = userService.getByUserId(userId);
+    var survey = createSurveyEntity(request.title(), user);
     this.save(survey);
     request.questions().stream().map(questionMapper::toEntity).forEach(questionService::save);
     return new CreateSurveyResponse(survey.getSlug());
   }
 
   public SurveyEntity createSurveyEntity(String title, UserEntity user) {
-    SurveyEntity survey = new SurveyEntity();
+    var survey = new SurveyEntity();
     survey.setTitle(title);
     survey.setUser(user);
     survey.setTitle(UUID.randomUUID().toString().replace("-", ""));
@@ -77,7 +73,7 @@ public class SurveyServiceImpl implements SurveyService {
   }
 
   public Page<SurveyResponse> getPage(Long userId, Pageable page) {
-    UserEntity user = userService.getByUserId(userId);
+    var user = userService.getByUserId(userId);
     return surveyRepository
         .findAllByUser(user, page)
         .map(
@@ -87,35 +83,37 @@ public class SurveyServiceImpl implements SurveyService {
             });
   }
 
-  public ResultSurveyResponse getResult(Long userId, String slug, Pageable page) {
-    UserEntity user = userService.getByUserId(userId);
-
-    // TODO impl
-    return null;
+  public ResultSurveyResponse getResult(Long userId, String surveySlug, Pageable page) {
+    var user = userService.getByUserId(userId);
+    var survey = getBySlug(surveySlug);
+    var isFinished = survey.getExpireDate().isBefore(Instant.now());
+    var numberOfParticipants = answerService.getNumberOfParticipants(surveySlug);
+    var results = answerService.getResultResponse(survey.getSlug(), page);
+    return new ResultSurveyResponse(survey.getTitle(), isFinished, results, numberOfParticipants);
   }
 
   @Transactional
   @Override
   public void submit(Long userId, String slug, SubmitSurveyRequest request) {
-    UserEntity user = userService.getByUserId(userId);
-    SurveyEntity survey = getBySlug(slug);
+    var user = userService.getByUserId(userId);
+    var survey = getBySlug(slug);
     request.answers().stream()
-        .map(answer -> this.createAnswer(answer.choiceId(), answer.questionId(), survey, user))
-        .forEach(answerRepository::save);
+        .map(
+            answer ->
+                answerService.createAnswer(answer.choiceId(), answer.questionId(), survey, user))
+        .forEach(answerService::save);
   }
 
-  public AnswerEntity createAnswer(
-      Long choiceId, Long questionId, SurveyEntity survey, UserEntity user) {
-    ChoiceEntity choice = choiceService.getByIdAndQuestionId(choiceId, questionId);
-    QuestionEntity question = questionService.getByQuestionIdAndSurvey(questionId, survey);
-    AnswerEntity answer = new AnswerEntity();
-    answer.setSurvey(survey);
-    answer.setUser(user);
-    answer.setChoice(choice);
-    answer.setQuestion(question);
-    return answer;
+  public SurveyEntity getBySlugAndUser(String slug, UserEntity user) {
+    return surveyRepository
+        .findBySlug(slug)
+        .orElseThrow(
+            () ->
+                appExceptionUtil.getAppException(
+                    "user.not.found.error.message", "user.not.found.error.code"));
   }
 
+  @Override
   public SurveyEntity getBySlug(String slug) {
     return surveyRepository
         .findBySlug(slug)

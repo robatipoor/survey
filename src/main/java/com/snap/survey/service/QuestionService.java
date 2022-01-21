@@ -16,4 +16,6 @@ public interface QuestionService {
   QuestionEntity getByQuestionIdAndSurvey(Long questionId, SurveyEntity survey);
 
   boolean existsByQuestionIdAndSurvey(Long questionId, SurveyEntity survey);
+
+  Page<QuestionEntity> getBySurveySlug(String surveySlug, Pageable page);
 }

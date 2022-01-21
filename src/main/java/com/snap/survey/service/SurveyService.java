@@ -18,5 +18,7 @@ public interface SurveyService {
 
   void submit(Long userId, String slug, SubmitSurveyRequest request);
 
+  SurveyEntity getBySlug(String slug);
+
   void save(SurveyEntity survey);
 }

@@ -5,5 +5,5 @@ import java.util.List;
 
 public record AnswerResultResponse(
     @JsonProperty("question_id") Long questionId,
-    @JsonProperty("question_content") Long questionContent,
+    @JsonProperty("question_content") String questionContent,
     List<AnswerChoiceResultResponse> answers) {}
