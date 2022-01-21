@@ -6,6 +6,7 @@ import com.snap.survey.model.response.BaseResponse;
 import com.snap.survey.model.response.CreateSurveyResponse;
 import com.snap.survey.model.response.ResultSurveyResponse;
 import com.snap.survey.model.response.SurveyResponse;
+import com.snap.survey.service.SurveyService;
 import com.snap.survey.util.BaseResponseUtil;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -21,16 +22,18 @@ import org.springframework.web.bind.annotation.*;
 public class SurveyController {
 
   private final BaseResponseUtil baseResponseUtil;
+  private final SurveyService surveyService;
 
-  public SurveyController(BaseResponseUtil baseResponseUtil) {
+  public SurveyController(BaseResponseUtil baseResponseUtil, SurveyService surveyService) {
     this.baseResponseUtil = baseResponseUtil;
+    this.surveyService = surveyService;
   }
 
   @PostMapping("/create")
   // Role Admin
   public ResponseEntity<BaseResponse<CreateSurveyResponse>> create(
       @Valid @RequestBody CreateSurveyRequest request) {
-    // TODO impl
+    //    surveyService.create()
     return null;
   }
 
