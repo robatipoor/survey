@@ -13,15 +13,15 @@ import org.springframework.stereotype.Repository;
 public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> {
   boolean existsByIdAndSurvey(Long id, SurveyEntity survey);
 
-  Optional<QuestionEntity> findByQuestionIdAndSurvey(Long id, SurveyEntity survey);
+  Optional<QuestionEntity> findByIdAndSurvey(Long id, SurveyEntity survey);
 
   @Query(
       "SELECT q FROM QuestionEntity q INNER JOIN q.survey s "
-          + "INNER JOIN s.user u WHERE q.id = :id AND u.user.id = :userId")
-  Optional<QuestionEntity> findByIdAndAdminUserId(Long questionId, Long userId);
+          + "INNER JOIN s.user u WHERE q.id = :id AND u.id = :userId")
+  Optional<QuestionEntity> findByIdAndAdminUserId(Long id, Long userId);
 
   @Query(
       "SELECT q FROM QuestionEntity q INNER JOIN q.survey s "
-          + "INNER JOIN s.user u WHERE s.slug = :slug AND u.user.id = :userId")
+          + "INNER JOIN s.user u WHERE s.slug = :slug AND u.id = :userId")
   Page<QuestionEntity> findAllBySurveySlugAndAdminUserId(String slug, Long userId, Pageable page);
 }

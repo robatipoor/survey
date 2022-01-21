@@ -1,5 +1,6 @@
 package com.snap.survey.service;
 
+import com.snap.survey.entity.QuestionEntity;
 import com.snap.survey.entity.SurveyEntity;
 import com.snap.survey.entity.UserEntity;
 import com.snap.survey.model.request.CreateSurveyRequest;
@@ -7,6 +8,7 @@ import com.snap.survey.model.request.SubmitSurveyRequest;
 import com.snap.survey.model.response.CreateSurveyResponse;
 import com.snap.survey.model.response.ResultSurveyResponse;
 import com.snap.survey.model.response.SurveyResponse;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,7 +21,8 @@ public interface SurveyService {
 
   void submit(Long userId, String slug, SubmitSurveyRequest request);
 
-  SurveyEntity createSurvey(String title, UserEntity user);
+  SurveyEntity createSurvey(
+      String title, long expireDays, Set<QuestionEntity> questions, UserEntity user);
 
   SurveyEntity getBySlugAndUserId(String slug, Long userId);
 

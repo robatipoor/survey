@@ -57,7 +57,7 @@ public class QuestionServiceImpl implements QuestionService {
   @Override
   public QuestionEntity getByQuestionIdAndSurvey(Long questionId, SurveyEntity survey) {
     return questionRepository
-        .findByQuestionIdAndSurvey(questionId, survey)
+        .findByIdAndSurvey(questionId, survey)
         .orElseThrow(
             () -> {
               return appExceptionUtil.getAppException("", "");

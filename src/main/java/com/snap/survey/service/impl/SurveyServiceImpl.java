@@ -13,7 +13,10 @@ import com.snap.survey.repository.SurveyRepository;
 import com.snap.survey.service.*;
 import com.snap.survey.util.AppExceptionUtil;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,17 +62,21 @@ public class SurveyServiceImpl implements SurveyService {
   @Override
   public CreateSurveyResponse create(Long userId, CreateSurveyRequest request) {
     var user = userService.getByUserId(userId);
-    var survey = createSurvey(request.title(), user);
+    var questions =
+        request.questions().stream().map(questionMapper::toEntity).collect(Collectors.toSet());
+    var survey = createSurvey(request.title(), request.expireDays(), questions, user);
     this.save(survey);
-    request.questions().stream().map(questionMapper::toEntity).forEach(questionService::save);
     return new CreateSurveyResponse(survey.getSlug());
   }
 
   @Override
-  public SurveyEntity createSurvey(String title, UserEntity user) {
+  public SurveyEntity createSurvey(
+      String title, long expireDays, Set<QuestionEntity> questions, UserEntity user) {
     var survey = new SurveyEntity();
     survey.setTitle(title);
+    survey.setExpireDate(Instant.now().plus(expireDays, ChronoUnit.DAYS));
     survey.setUser(user);
+    survey.setQuestions(questions);
     survey.setSlug(UUID.randomUUID().toString().replace("-", ""));
     return survey;
   }

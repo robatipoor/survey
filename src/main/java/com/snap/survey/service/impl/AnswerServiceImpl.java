@@ -25,7 +25,6 @@ public class AnswerServiceImpl implements AnswerService {
   private final ChoiceService choiceService;
   private final AppExceptionUtil appExceptionUtil;
   private final UserService userService;
-  private final SurveyService surveyService;
   private final QuestionService questionService;
 
   public AnswerServiceImpl(
@@ -34,14 +33,12 @@ public class AnswerServiceImpl implements AnswerService {
       ChoiceService choiceService,
       AppExceptionUtil appExceptionUtil,
       UserService userService,
-      SurveyService surveyService,
       QuestionService questionService) {
     this.answerRepository = answerRepository;
     this.answerMapper = answerMapper;
     this.choiceService = choiceService;
     this.appExceptionUtil = appExceptionUtil;
     this.userService = userService;
-    this.surveyService = surveyService;
     this.questionService = questionService;
   }
 
