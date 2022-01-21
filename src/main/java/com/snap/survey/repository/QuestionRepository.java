@@ -24,4 +24,7 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
       "SELECT q FROM QuestionEntity q INNER JOIN q.survey s "
           + "INNER JOIN s.user u WHERE s.slug = :slug AND u.id = :userId")
   Page<QuestionEntity> findAllBySurveySlugAndAdminUserId(String slug, Long userId, Pageable page);
+
+  @Query("SELECT q FROM QuestionEntity q INNER JOIN q.survey s WHERE s.slug = :slug")
+  Page<QuestionEntity> findAllBySurveySlug(String slug, Pageable page);
 }

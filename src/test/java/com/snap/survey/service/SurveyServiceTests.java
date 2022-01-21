@@ -75,6 +75,8 @@ public class SurveyServiceTests {
     var submitReq = new SubmitSurveyRequest(submitAnswerRequests);
     surveyService.submit(users.get(0).getId(), response.slug(), submitReq);
     assertEquals(answerService.getNumberOfParticipants(response.slug()), 1);
+    var result = surveyService.getResult(userId, response.slug(), Pageable.ofSize(1));
+    assertEquals(result.results().getContent().get(0).answers().get(0).percentage(), 100);
   }
 
   @Test

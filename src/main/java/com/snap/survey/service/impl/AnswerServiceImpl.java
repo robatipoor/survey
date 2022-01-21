@@ -104,8 +104,8 @@ public class AnswerServiceImpl implements AnswerService {
                           choice -> {
                             var percentage =
                                 numberOfParticipants
-                                    * 1.0
-                                    / getNumberOfParticipantsChoice(surveySlug, choice.getId());
+                                    / getNumberOfParticipantsChoice(surveySlug, choice.getId())
+                                    * 100;
                             return new AnswerChoiceResultResponse(
                                 choice.getNumber(), choice.getContent(), percentage);
                           })

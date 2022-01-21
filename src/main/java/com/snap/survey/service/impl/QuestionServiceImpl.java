@@ -70,6 +70,6 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   public Page<QuestionEntity> getBySurveySlug(String surveySlug, Pageable page) {
-    return null;
+    return questionRepository.findAllBySurveySlug(surveySlug, page);
   }
 }
