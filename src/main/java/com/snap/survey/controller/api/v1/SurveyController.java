@@ -1,5 +1,6 @@
 package com.snap.survey.controller.api.v1;
 
+import com.snap.survey.model.UserPrincipal;
 import com.snap.survey.model.request.CreateSurveyRequest;
 import com.snap.survey.model.request.SubmitSurveyRequest;
 import com.snap.survey.model.response.BaseResponse;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,30 +34,37 @@ public class SurveyController {
   @PostMapping("/create")
   // Role Admin
   public ResponseEntity<BaseResponse<CreateSurveyResponse>> create(
-      @Valid @RequestBody CreateSurveyRequest request) {
-    //    surveyService.create()
-    return null;
+      Authentication authentication, @Valid @RequestBody CreateSurveyRequest request) {
+    Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    var response = surveyService.create(userId, request);
+    return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
 
   @GetMapping("/list")
   // Role Admin
-  public ResponseEntity<BaseResponse<Page<SurveyResponse>>> getPage(Pageable page) {
-    // TODO impl
-    return null;
+  public ResponseEntity<BaseResponse<Page<SurveyResponse>>> getPage(
+      Authentication authentication, Pageable page) {
+    Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    var response = surveyService.getPage(userId, page);
+    return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
 
   @GetMapping("/result/{slug}")
   // Role Admin
   public ResponseEntity<BaseResponse<ResultSurveyResponse>> getResult(
-      @NotEmpty @PathVariable String slug, Pageable page) {
-    // TODO impl
-    return null;
+      Authentication authentication, @NotEmpty @PathVariable String slug, Pageable page) {
+    Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    var response = surveyService.getResult(userId, slug, page);
+    return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
 
   @PostMapping("/submit/{slug}")
   public ResponseEntity<BaseResponse<Void>> submit(
-      @Valid @RequestBody SubmitSurveyRequest request, @NotEmpty @PathVariable String slug) {
-    // TODO impl
-    return null;
+      Authentication authentication,
+      @Valid @RequestBody SubmitSurveyRequest request,
+      @NotEmpty @PathVariable String slug) {
+    Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    surveyService.submit(userId, slug, request);
+    return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(null));
   }
 }

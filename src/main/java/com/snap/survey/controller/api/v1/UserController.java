@@ -29,7 +29,7 @@ public class UserController {
   public ResponseEntity<BaseResponse<LoginResponse>> login(
       @RequestBody @Valid LoginRequest loginRequest) {
     log.info("receive request authenticate user : {}", loginRequest.usernameOrEmail());
-    LoginResponse response = userService.loginUser(loginRequest);
+    var response = userService.loginUser(loginRequest);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
 
