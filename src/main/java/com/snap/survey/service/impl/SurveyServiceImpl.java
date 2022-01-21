@@ -56,22 +56,25 @@ public class SurveyServiceImpl implements SurveyService {
   }
 
   @Transactional
+  @Override
   public CreateSurveyResponse create(Long userId, CreateSurveyRequest request) {
     var user = userService.getByUserId(userId);
-    var survey = createSurveyEntity(request.title(), user);
+    var survey = createSurvey(request.title(), user);
     this.save(survey);
     request.questions().stream().map(questionMapper::toEntity).forEach(questionService::save);
     return new CreateSurveyResponse(survey.getSlug());
   }
 
-  public SurveyEntity createSurveyEntity(String title, UserEntity user) {
+  @Override
+  public SurveyEntity createSurvey(String title, UserEntity user) {
     var survey = new SurveyEntity();
     survey.setTitle(title);
     survey.setUser(user);
-    survey.setTitle(UUID.randomUUID().toString().replace("-", ""));
+    survey.setSlug(UUID.randomUUID().toString().replace("-", ""));
     return survey;
   }
 
+  @Override
   public Page<SurveyResponse> getPage(Long userId, Pageable page) {
     var user = userService.getByUserId(userId);
     return surveyRepository
@@ -83,9 +86,9 @@ public class SurveyServiceImpl implements SurveyService {
             });
   }
 
+  @Override
   public ResultSurveyResponse getResult(Long userId, String surveySlug, Pageable page) {
-    var user = userService.getByUserId(userId);
-    var survey = getBySlug(surveySlug);
+    var survey = getBySlugAndUserId(surveySlug, userId);
     var isFinished = survey.getExpireDate().isBefore(Instant.now());
     var numberOfParticipants = answerService.getNumberOfParticipants(surveySlug);
     var results = answerService.getResultResponse(survey.getSlug(), page);
@@ -104,9 +107,10 @@ public class SurveyServiceImpl implements SurveyService {
         .forEach(answerService::save);
   }
 
-  public SurveyEntity getBySlugAndUser(String slug, UserEntity user) {
+  @Override
+  public SurveyEntity getBySlugAndUserId(String slug, Long userId) {
     return surveyRepository
-        .findBySlug(slug)
+        .findBySlugAndUserId(slug, userId)
         .orElseThrow(
             () ->
                 appExceptionUtil.getAppException(

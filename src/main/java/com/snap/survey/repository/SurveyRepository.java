@@ -13,6 +13,8 @@ public interface SurveyRepository extends JpaRepository<SurveyEntity, Long> {
 
   Optional<SurveyEntity> findBySlug(String slug);
 
+  Optional<SurveyEntity> findBySlugAndUserId(String slug, Long userId);
+
   Page<SurveyEntity> findAllByUser(UserEntity user, Pageable page);
 
   Page<SurveyEntity> findAllByUserAndSlug(UserEntity user, String slug, Pageable page);

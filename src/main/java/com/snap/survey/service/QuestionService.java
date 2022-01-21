@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 public interface QuestionService {
   Page<QuestionResponse> getPage(Long userId, String slug, Pageable page);
 
-  QuestionResponse getOne(Long userId, Long questionId, Pageable page);
+  QuestionResponse getOne(Long userId, Long questionId);
 
   void save(QuestionEntity question);
 

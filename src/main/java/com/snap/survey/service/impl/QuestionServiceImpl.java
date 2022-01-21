@@ -2,6 +2,7 @@ package com.snap.survey.service.impl;
 
 import com.snap.survey.entity.QuestionEntity;
 import com.snap.survey.entity.SurveyEntity;
+import com.snap.survey.mapper.QuestionMapper;
 import com.snap.survey.model.response.QuestionResponse;
 import com.snap.survey.repository.QuestionRepository;
 import com.snap.survey.service.QuestionService;
@@ -16,22 +17,31 @@ import org.springframework.stereotype.Service;
 public class QuestionServiceImpl implements QuestionService {
 
   private final QuestionRepository questionRepository;
+  private final QuestionMapper questionMapper;
   private final AppExceptionUtil appExceptionUtil;
 
   public QuestionServiceImpl(
-      QuestionRepository questionRepository, AppExceptionUtil appExceptionUtil) {
+      QuestionRepository questionRepository,
+      QuestionMapper questionMapper,
+      AppExceptionUtil appExceptionUtil) {
     this.questionRepository = questionRepository;
+    this.questionMapper = questionMapper;
     this.appExceptionUtil = appExceptionUtil;
   }
 
+  @Override
   public Page<QuestionResponse> getPage(Long userId, String slug, Pageable page) {
-    // TODO impl
-    return null;
+    return questionRepository
+        .findAllBySurveySlugAndAdminUserId(slug, userId, page)
+        .map(questionMapper::toResponse);
   }
 
-  public QuestionResponse getOne(Long userId, Long questionId, Pageable page) {
-    // TODO impl
-    return null;
+  @Override
+  public QuestionResponse getOne(Long userId, Long questionId) {
+    return questionRepository
+        .findByIdAndAdminUserId(questionId, userId)
+        .map(questionMapper::toResponse)
+        .orElseThrow(() -> appExceptionUtil.getAppException("", ""));
   }
 
   @Override

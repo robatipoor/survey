@@ -1,14 +1,12 @@
 package com.snap.survey.service.impl;
 
 import com.snap.survey.entity.*;
+import com.snap.survey.mapper.AnswerMapper;
 import com.snap.survey.model.response.AnswerChoiceResultResponse;
 import com.snap.survey.model.response.AnswerResponse;
 import com.snap.survey.model.response.AnswerResultResponse;
 import com.snap.survey.repository.AnswerRepository;
-import com.snap.survey.service.AnswerService;
-import com.snap.survey.service.ChoiceService;
-import com.snap.survey.service.QuestionService;
-import com.snap.survey.service.UserService;
+import com.snap.survey.service.*;
 import com.snap.survey.util.AppExceptionUtil;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,32 +21,43 @@ import org.springframework.transaction.annotation.Transactional;
 public class AnswerServiceImpl implements AnswerService {
 
   private final AnswerRepository answerRepository;
+  private final AnswerMapper answerMapper;
   private final ChoiceService choiceService;
   private final AppExceptionUtil appExceptionUtil;
   private final UserService userService;
+  private final SurveyService surveyService;
   private final QuestionService questionService;
 
   public AnswerServiceImpl(
       AnswerRepository answerRepository,
+      AnswerMapper answerMapper,
       ChoiceService choiceService,
       AppExceptionUtil appExceptionUtil,
       UserService userService,
+      SurveyService surveyService,
       QuestionService questionService) {
     this.answerRepository = answerRepository;
+    this.answerMapper = answerMapper;
     this.choiceService = choiceService;
     this.appExceptionUtil = appExceptionUtil;
     this.userService = userService;
+    this.surveyService = surveyService;
     this.questionService = questionService;
   }
 
+  @Override
   public Page<AnswerResponse> getPage(Long userId, String slug, Pageable page) {
-    // TODO impl
-    return null;
+    return answerRepository
+        .findAllBySurveySlugAndAdminUserId(slug, userId, page)
+        .map(answerMapper::toResponse);
   }
 
-  public AnswerResponse getOne(Long userId, Long answerId, Pageable page) {
-    // TODO impl
-    return null;
+  @Override
+  public AnswerResponse getOne(Long userId, Long answerId) {
+    return answerRepository
+        .findByIdAndAdminUserId(answerId, userId)
+        .map(answerMapper::toResponse)
+        .orElseThrow(() -> appExceptionUtil.getAppException("", ""));
   }
 
   @Override
