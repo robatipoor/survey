@@ -2,6 +2,7 @@ package com.snap.survey.service.impl;
 
 import com.snap.survey.entity.*;
 import com.snap.survey.mapper.AnswerMapper;
+import com.snap.survey.mapper.ChoiceMapper;
 import com.snap.survey.mapper.QuestionMapper;
 import com.snap.survey.mapper.SurveyMapper;
 import com.snap.survey.model.request.CreateSurveyRequest;
@@ -14,12 +15,11 @@ import com.snap.survey.service.*;
 import com.snap.survey.util.AppExceptionUtil;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +29,7 @@ public class SurveyServiceImpl implements SurveyService {
 
   private final SurveyRepository surveyRepository;
   private final QuestionMapper questionMapper;
+  private final ChoiceMapper choiceMapper;
   private final QuestionService questionService;
   private final ChoiceService choiceService;
   private final AppExceptionUtil appExceptionUtil;
@@ -40,6 +41,7 @@ public class SurveyServiceImpl implements SurveyService {
   public SurveyServiceImpl(
       SurveyRepository surveyRepository,
       QuestionMapper questionMapper,
+      ChoiceMapper choiceMapper,
       QuestionService questionService,
       ChoiceService choiceService,
       AppExceptionUtil appExceptionUtil,
@@ -49,6 +51,7 @@ public class SurveyServiceImpl implements SurveyService {
       AnswerService answerService) {
     this.surveyRepository = surveyRepository;
     this.questionMapper = questionMapper;
+    this.choiceMapper = choiceMapper;
     this.questionService = questionService;
     this.choiceService = choiceService;
     this.appExceptionUtil = appExceptionUtil;
@@ -62,21 +65,34 @@ public class SurveyServiceImpl implements SurveyService {
   @Override
   public CreateSurveyResponse create(Long userId, CreateSurveyRequest request) {
     var user = userService.getByUserId(userId);
-    var questions =
-        request.questions().stream().map(questionMapper::toEntity).collect(Collectors.toSet());
-    var survey = createSurvey(request.title(), request.expireDays(), questions, user);
+    var survey = createSurvey(request.title(), request.expireDays(), user);
     this.save(survey);
+    request.questions().stream()
+        .map(
+            questionRequest -> {
+              var question = questionMapper.toEntity(questionRequest);
+              var choices = choiceMapper.toEntity(questionRequest.choices());
+              question.setSurvey(survey);
+              return Pair.of(question, choices);
+            })
+        .forEach(
+            pair -> {
+              var question = pair.getFirst();
+              var choices = pair.getSecond();
+              questionService.save(question);
+              choices.stream()
+                  .peek(choice -> choice.setQuestion(question))
+                  .forEach(choiceService::save);
+            });
     return new CreateSurveyResponse(survey.getSlug());
   }
 
   @Override
-  public SurveyEntity createSurvey(
-      String title, long expireDays, Set<QuestionEntity> questions, UserEntity user) {
+  public SurveyEntity createSurvey(String title, long expireDays, UserEntity user) {
     var survey = new SurveyEntity();
     survey.setTitle(title);
     survey.setExpireDate(Instant.now().plus(expireDays, ChronoUnit.DAYS));
     survey.setUser(user);
-    survey.setQuestions(questions);
     survey.setSlug(UUID.randomUUID().toString().replace("-", ""));
     return survey;
   }
@@ -107,6 +123,7 @@ public class SurveyServiceImpl implements SurveyService {
   public void submit(Long userId, String slug, SubmitSurveyRequest request) {
     var user = userService.getByUserId(userId);
     var survey = getBySlug(slug);
+    log.info(">>>>> submit survey userId : {} surveyId : {}", userId, survey.getId());
     request.answers().stream()
         .map(
             answer ->

@@ -9,4 +9,6 @@ public interface ChoiceService {
   boolean existsByIdAndQuestionId(Long choiceId, Long questionId);
 
   List<ChoiceEntity> getAllByQuestionId(Long questionId);
+
+  void save(ChoiceEntity choice);
 }

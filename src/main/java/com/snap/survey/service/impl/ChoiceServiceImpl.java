@@ -39,4 +39,14 @@ public class ChoiceServiceImpl implements ChoiceService {
   public boolean existsByIdAndQuestionId(Long choiceId, Long questionId) {
     return choiceRepository.existsByIdAndQuestionId(choiceId, questionId);
   }
+
+  @Override
+  public void save(ChoiceEntity choice) {
+    try {
+      choiceRepository.save(choice);
+    } catch (Exception e) {
+      log.error("save choice entity exception error message : {}", e.getMessage());
+      throw appExceptionUtil.getAppException("", "");
+    }
+  }
 }

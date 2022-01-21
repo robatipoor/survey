@@ -80,6 +80,7 @@ public class AnswerServiceImpl implements AnswerService {
   }
 
   @Override
+  @Transactional
   public void save(AnswerEntity answer) {
     try {
       answerRepository.save(answer);
