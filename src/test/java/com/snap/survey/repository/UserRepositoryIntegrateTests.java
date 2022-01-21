@@ -23,7 +23,7 @@ public class UserRepositoryIntegrateTests {
 
   @Test
   @Transactional
-  public void saveTest1() {
+  public void saveIntegrateTest() {
     String email = "ali@mail.com";
     String password = "password";
     String username = "ali";
@@ -36,7 +36,7 @@ public class UserRepositoryIntegrateTests {
             .email(email)
             .roles(new HashSet<>(roleRepository.findAll()))
             .build();
-    user = userRepository.save(user);
+    userRepository.save(user);
     userRepository.flush();
     assertNotNull(user.getId());
     userRepository.findByUsernameOrEmail(username, null).orElseThrow();

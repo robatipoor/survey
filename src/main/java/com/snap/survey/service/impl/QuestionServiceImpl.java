@@ -30,6 +30,16 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
+  public Page<QuestionResponse> getResponseBySurveySlug(String slug, Pageable page) {
+    return this.getBySurveySlug(slug, page).map(questionMapper::toResponse);
+  }
+
+  @Override
+  public Page<QuestionEntity> getBySurveySlug(String surveySlug, Pageable page) {
+    return questionRepository.findAllBySurveySlug(surveySlug, page);
+  }
+
+  @Override
   public Page<QuestionResponse> getPage(Long userId, String slug, Pageable page) {
     return questionRepository
         .findAllBySurveySlugAndAdminUserId(slug, userId, page)
@@ -67,9 +77,5 @@ public class QuestionServiceImpl implements QuestionService {
   @Override
   public boolean existsByQuestionIdAndSurvey(Long questionId, SurveyEntity survey) {
     return questionRepository.existsByIdAndSurvey(questionId, survey);
-  }
-
-  public Page<QuestionEntity> getBySurveySlug(String surveySlug, Pageable page) {
-    return questionRepository.findAllBySurveySlug(surveySlug, page);
   }
 }
