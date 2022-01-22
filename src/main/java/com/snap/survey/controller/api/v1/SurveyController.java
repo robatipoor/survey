@@ -1,5 +1,6 @@
 package com.snap.survey.controller.api.v1;
 
+import com.snap.survey.config.Constants;
 import com.snap.survey.model.UserPrincipal;
 import com.snap.survey.model.request.CreateSurveyRequest;
 import com.snap.survey.model.request.SubmitSurveyRequest;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +34,7 @@ public class SurveyController {
   }
 
   @PostMapping("/create")
-  // Role Admin
+  @PreAuthorize(Constants.ADMIN)
   public ResponseEntity<BaseResponse<CreateSurveyResponse>> create(
       Authentication authentication, @Valid @RequestBody CreateSurveyRequest request) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
@@ -41,7 +43,7 @@ public class SurveyController {
   }
 
   @GetMapping("/list")
-  // Role Admin
+  @PreAuthorize(Constants.ADMIN)
   public ResponseEntity<BaseResponse<Page<SurveyResponse>>> getPage(
       Authentication authentication, Pageable page) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
@@ -50,7 +52,7 @@ public class SurveyController {
   }
 
   @GetMapping("/result/{slug}")
-  // Role Admin
+  @PreAuthorize(Constants.ADMIN)
   public ResponseEntity<BaseResponse<ResultSurveyResponse>> getResult(
       Authentication authentication, @NotEmpty @PathVariable String slug, Pageable page) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();

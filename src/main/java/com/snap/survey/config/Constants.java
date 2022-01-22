@@ -10,6 +10,14 @@ public class Constants {
   public static final String[] LOCAL_ACCESS_API_LIST = {};
 
   public static final String[] PUBLIC_ACCESS_API_LIST = {
-    "/api/v1/ping", "/api-docs", "/api-docs/**", "/swagger-ui/**"
+    "/api/v1/app/ping",
+    "/api-docs",
+    "/api-docs/**",
+    "/swagger-ui/**",
+    "/api/v1/user/login",
+    "/api/v1/user/register"
   };
+
+  public static final String ADMIN = "hasAuthority('ADMIN')";
+  public static final String USER = "hasAuthority('USER')";
 }

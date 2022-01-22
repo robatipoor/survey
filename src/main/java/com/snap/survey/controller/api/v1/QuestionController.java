@@ -1,5 +1,6 @@
 package com.snap.survey.controller.api.v1;
 
+import com.snap.survey.config.Constants;
 import com.snap.survey.model.UserPrincipal;
 import com.snap.survey.model.response.BaseResponse;
 import com.snap.survey.model.response.QuestionResponse;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +41,7 @@ public class QuestionController {
   }
 
   @GetMapping("/{id}")
+  @PreAuthorize(Constants.ADMIN)
   public ResponseEntity<BaseResponse<QuestionResponse>> getOne(
       Authentication authentication, @NotNull @PathVariable Long id) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();

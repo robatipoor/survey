@@ -1,4 +1,4 @@
-package com.snap.survey.controller.api.v1;
+package com.snap.survey.controller;
 
 import com.snap.survey.exception.AppException;
 import com.snap.survey.model.response.BaseResponse;
@@ -6,10 +6,13 @@ import com.snap.survey.util.BaseResponseUtil;
 import java.nio.file.AccessDeniedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 @Slf4j
@@ -46,5 +49,17 @@ public class AdviceBaseController {
         ex.getClass().getCanonicalName(),
         ex.getMessage());
     return responseUtil.getResponse("unexpected.error.message", "unexpected.error.code");
+  }
+
+  @ResponseBody
+  @ExceptionHandler({
+    BindException.class,
+    MethodArgumentTypeMismatchException.class,
+    HttpMessageNotReadableException.class
+  })
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  BaseResponse<Void> invalidInputExceptionHandler(Exception ex) {
+    log.error("invalid input exception error message {}", ex.getMessage());
+    return responseUtil.getResponse("invalid.input.error.message", "invalid.input.error.code");
   }
 }
