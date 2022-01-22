@@ -71,7 +71,7 @@ public class SurveyServiceImpl implements SurveyService {
         .map(
             questionRequest -> {
               var question = questionMapper.toEntity(questionRequest);
-              var choices = choiceMapper.toEntity(questionRequest.choices());
+              var choices = choiceMapper.toEntity(questionRequest.choicesRequest());
               question.setSurvey(survey);
               return Pair.of(question, choices);
             })

@@ -8,6 +8,7 @@ import com.snap.survey.service.QuestionService;
 import com.snap.survey.util.BaseResponseUtil;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Validated
 @RequestMapping("/api/v1/question")
+@Slf4j
 public class QuestionController {
 
   private final BaseResponseUtil baseResponseUtil;
@@ -36,16 +38,28 @@ public class QuestionController {
   public ResponseEntity<BaseResponse<Page<QuestionResponse>>> getPage(
       Authentication authentication, @NotEmpty @PathVariable String slug, Pageable page) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
-    var response = questionService.getPage(userId, slug, page);
+    log.info("receive request get page question userId : {} slug : {}", userId, slug);
+    var response = questionService.getBySurveySlug(slug, page);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/one/{id}")
   @PreAuthorize(Constants.ADMIN)
-  public ResponseEntity<BaseResponse<QuestionResponse>> getOne(
+  public ResponseEntity<BaseResponse<QuestionResponse>> getOneByAdmin(
       Authentication authentication, @NotNull @PathVariable Long id) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    log.info("receive request get one question userId : {}", userId);
     var response = questionService.getOne(userId, id);
+    return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
+  }
+
+  @GetMapping("/list/{slug}")
+  @PreAuthorize(Constants.ADMIN)
+  public ResponseEntity<BaseResponse<Page<QuestionResponse>>> getPageByAdmin(
+      Authentication authentication, @NotEmpty @PathVariable String slug, Pageable page) {
+    Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    log.info("receive request get one question userId : {}", userId);
+    var response = questionService.getByUserIdAndSurveySlug(userId, slug, page);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
 }

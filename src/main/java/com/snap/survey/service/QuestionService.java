@@ -8,9 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface QuestionService {
 
-  Page<QuestionResponse> getResponseBySurveySlug(String slug, Pageable page);
-
-  Page<QuestionResponse> getPage(Long userId, String slug, Pageable page);
+  Page<QuestionResponse> getByUserIdAndSurveySlug(Long userId, String slug, Pageable page);
 
   QuestionResponse getOne(Long userId, Long questionId);
 
@@ -20,5 +18,7 @@ public interface QuestionService {
 
   boolean existsByQuestionIdAndSurvey(Long questionId, SurveyEntity survey);
 
-  Page<QuestionEntity> getBySurveySlug(String surveySlug, Pageable page);
+  Page<QuestionEntity> getEntityBySurveySlug(String surveySlug, Pageable page);
+
+  Page<QuestionResponse> getBySurveySlug(String slug, Pageable page);
 }

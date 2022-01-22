@@ -95,7 +95,7 @@ public class AnswerServiceImpl implements AnswerService {
   public Page<AnswerResultResponse> getResultResponse(String surveySlug, Pageable page) {
     var numberOfParticipants = getNumberOfParticipants(surveySlug);
     return questionService
-        .getBySurveySlug(surveySlug, page)
+        .getEntityBySurveySlug(surveySlug, page)
         .map(
             question -> {
               List<AnswerChoiceResultResponse> answers =

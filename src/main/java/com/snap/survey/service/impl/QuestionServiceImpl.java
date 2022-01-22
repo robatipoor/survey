@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -30,17 +31,19 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public Page<QuestionResponse> getResponseBySurveySlug(String slug, Pageable page) {
-    return this.getBySurveySlug(slug, page).map(questionMapper::toResponse);
+  @Transactional
+  public Page<QuestionResponse> getBySurveySlug(String slug, Pageable page) {
+    return this.getEntityBySurveySlug(slug, page).map(questionMapper::toResponse);
   }
 
   @Override
-  public Page<QuestionEntity> getBySurveySlug(String surveySlug, Pageable page) {
+  @Transactional
+  public Page<QuestionEntity> getEntityBySurveySlug(String surveySlug, Pageable page) {
     return questionRepository.findAllBySurveySlug(surveySlug, page);
   }
 
   @Override
-  public Page<QuestionResponse> getPage(Long userId, String slug, Pageable page) {
+  public Page<QuestionResponse> getByUserIdAndSurveySlug(Long userId, String slug, Pageable page) {
     return questionRepository
         .findAllBySurveySlugAndAdminUserId(slug, userId, page)
         .map(questionMapper::toResponse);

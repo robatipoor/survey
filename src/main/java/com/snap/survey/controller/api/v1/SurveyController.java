@@ -12,6 +12,7 @@ import com.snap.survey.service.SurveyService;
 import com.snap.survey.util.BaseResponseUtil;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Validated
 @RequestMapping("/api/v1/survey")
+@Slf4j
 public class SurveyController {
 
   private final BaseResponseUtil baseResponseUtil;
@@ -38,6 +40,7 @@ public class SurveyController {
   public ResponseEntity<BaseResponse<CreateSurveyResponse>> create(
       Authentication authentication, @Valid @RequestBody CreateSurveyRequest request) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    log.info("receive request create survey userId : {}", userId);
     var response = surveyService.create(userId, request);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
@@ -47,6 +50,7 @@ public class SurveyController {
   public ResponseEntity<BaseResponse<Page<SurveyResponse>>> getPage(
       Authentication authentication, Pageable page) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    log.info("receive request get page survey userId : {}", userId);
     var response = surveyService.getPage(userId, page);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
@@ -56,6 +60,7 @@ public class SurveyController {
   public ResponseEntity<BaseResponse<ResultSurveyResponse>> getResult(
       Authentication authentication, @NotEmpty @PathVariable String slug, Pageable page) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    log.info("receive request get result userId : {}", userId);
     var response = surveyService.getResult(userId, slug, page);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
@@ -66,6 +71,7 @@ public class SurveyController {
       @Valid @RequestBody SubmitSurveyRequest request,
       @NotEmpty @PathVariable String slug) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    log.info("receive request submit userId : {}", userId);
     surveyService.submit(userId, slug, request);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(null));
   }
