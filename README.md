@@ -5,7 +5,7 @@ create user and postgres database based on config user password etc ...
 You can use these [instructions](https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e
 )
 ```shell
-git clone github.com/robatipoor/survey
+git clone https://github.com/robatipoor/survey
 cd survey
 ./mvn spring-boot:run
 # open browser 
