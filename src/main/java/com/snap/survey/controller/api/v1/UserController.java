@@ -25,7 +25,7 @@ public class UserController {
     this.userService = userService;
   }
 
-  @GetMapping("/login")
+  @PostMapping("/login")
   public ResponseEntity<BaseResponse<LoginResponse>> login(
       @RequestBody @Valid LoginRequest loginRequest) {
     log.info("receive request authenticate user : {}", loginRequest.usernameOrEmail());

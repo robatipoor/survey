@@ -18,6 +18,6 @@ public class Constants {
     "/api/v1/user/register"
   };
 
-  public static final String ADMIN = "hasAuthority('ADMIN')";
-  public static final String USER = "hasAuthority('USER')";
+  public static final String ADMIN = "hasAuthority('ROLE_ADMIN')";
+  public static final String USER = "hasAuthority('ROLE_USER')";
 }
