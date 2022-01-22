@@ -43,6 +43,7 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
+  @Transactional
   public Page<QuestionResponse> getByUserIdAndSurveySlug(Long userId, String slug, Pageable page) {
     return questionRepository
         .findAllBySurveySlugAndAdminUserId(slug, userId, page)
@@ -50,6 +51,7 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
+  @Transactional
   public QuestionResponse getOne(Long userId, Long questionId) {
     return questionRepository
         .findByIdAndAdminUserId(questionId, userId)
@@ -58,6 +60,7 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
+  @Transactional
   public void save(QuestionEntity question) {
     try {
       questionRepository.save(question);
@@ -68,6 +71,7 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
+  @Transactional
   public QuestionEntity getByQuestionIdAndSurvey(Long questionId, SurveyEntity survey) {
     return questionRepository
         .findByIdAndSurvey(questionId, survey)

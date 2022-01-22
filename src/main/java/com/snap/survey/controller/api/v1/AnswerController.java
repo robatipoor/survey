@@ -32,18 +32,18 @@ public class AnswerController {
     this.answerService = answerService;
   }
 
-  @GetMapping("/{slug}")
+  @GetMapping("/list/{slug}")
   @PreAuthorize(Constants.ADMIN)
-  public ResponseEntity<BaseResponse<Page<AnswerResponse>>> getPage(
+  public ResponseEntity<BaseResponse<Page<AnswerResponse>>> getPageByAdmin(
       Authentication authentication, @NotEmpty @PathVariable String slug, Pageable page) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
     var response = answerService.getPage(userId, slug, page);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/one/{id}")
   @PreAuthorize(Constants.ADMIN)
-  public ResponseEntity<BaseResponse<AnswerResponse>> getOne(
+  public ResponseEntity<BaseResponse<AnswerResponse>> getOneByAdmin(
       Authentication authentication, @NotNull @PathVariable Long id) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
     var response = answerService.getOne(userId, id);

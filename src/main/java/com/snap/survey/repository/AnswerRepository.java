@@ -21,10 +21,19 @@ public interface AnswerRepository extends JpaRepository<AnswerEntity, Long> {
           + "INNER JOIN s.user u WHERE s.slug = :slug AND u.id  = :userId")
   Page<AnswerEntity> findAllBySurveySlugAndAdminUserId(String slug, Long userId, Pageable page);
 
-  @Query("SELECT COUNT(a) FROM AnswerEntity a GROUP BY a.user HAVING a.survey.slug = :surveySlug")
+  @Query(
+      value =
+          "SELECT COUNT(1) FROM ( "
+              + "SELECT s.slug,COUNT(s) FROM answers a INNER JOIN surveys s ON a.survey_id = s.id "
+              + "GROUP BY a.user_id,s.slug HAVING s.slug = :surveySlug) r ",
+      nativeQuery = true)
   int countAllUserAnswerBySurveySlug(String surveySlug);
 
   @Query(
-      "SELECT COUNT(a) FROM AnswerEntity a GROUP BY a.user HAVING a.survey.slug = :surveySlug AND a.choice.id = :choiceId")
+      value =
+          "SELECT COUNT(1) FROM ( "
+              + "SELECT COUNT(s) co FROM answers a INNER JOIN surveys s ON a.survey_id = s.id "
+              + "GROUP BY a.user_id,s.slug,a.choice_id HAVING s.slug = :surveySlug AND a.choice_id = :choiceId) r ",
+      nativeQuery = true)
   int countAllUserAnswerByIdAndSurveySlug(String surveySlug, Long choiceId);
 }

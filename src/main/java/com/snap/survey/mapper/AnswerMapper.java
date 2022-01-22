@@ -9,5 +9,6 @@ import org.mapstruct.Mapper;
 public abstract class AnswerMapper {
   public abstract AnswerEntity toEntity(SubmitAnswerRequest request);
 
+  // TODO mapper fix
   public abstract AnswerResponse toResponse(AnswerEntity answer);
 }

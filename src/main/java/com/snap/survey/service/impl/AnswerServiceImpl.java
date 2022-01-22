@@ -102,10 +102,9 @@ public class AnswerServiceImpl implements AnswerService {
                   choiceService.getAllByQuestionId(question.getId()).stream()
                       .map(
                           choice -> {
-                            var percentage =
-                                numberOfParticipants
-                                    / getNumberOfParticipantsChoice(surveySlug, choice.getId())
-                                    * 100;
+                            var numberParticipantsChoice =
+                                getNumberOfParticipantsChoice(surveySlug, choice.getId());
+                            var percentage = numberParticipantsChoice * 100 / numberOfParticipants;
                             return new AnswerChoiceResultResponse(
                                 choice.getNumber(), choice.getContent(), percentage);
                           })

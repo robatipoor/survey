@@ -123,7 +123,7 @@ public class SurveyServiceImpl implements SurveyService {
   public void submit(Long userId, String slug, SubmitSurveyRequest request) {
     var user = userService.getByUserId(userId);
     var survey = getBySlug(slug);
-    log.info(">>>>> submit survey userId : {} surveyId : {}", userId, survey.getId());
+    log.info("submit survey userId : {} surveyId : {}", userId, survey.getId());
     request.answers().stream()
         .map(
             answer ->
