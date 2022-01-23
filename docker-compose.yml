@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  app:
+    image: 'survey:latest'
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/survey-db?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+      - SPRING_DATASOURCE_USERNAME=survey-user
+      - SPRING_DATASOURCE_PASSWORD=survey-pass
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+
+  db:
+    image: 'postgres:latest'
+    container_name: db
+    environment:
+      - POSTGRES_USER=survey-user
+      - POSTGRES_PASSWORD=survey-pass
+      - POSTGRES_DB=survey-db
