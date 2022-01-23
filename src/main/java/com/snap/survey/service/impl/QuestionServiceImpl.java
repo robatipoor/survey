@@ -31,6 +31,11 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
+  public long countBySurveySlug(String slug) {
+    return questionRepository.countBySurveySlug(slug);
+  }
+
+  @Override
   @Transactional
   public Page<QuestionResponse> getBySurveySlug(String slug, Pageable page) {
     return this.getEntityBySurveySlug(slug, page).map(questionMapper::toResponse);
@@ -56,7 +61,10 @@ public class QuestionServiceImpl implements QuestionService {
     return questionRepository
         .findByIdAndAdminUserId(questionId, userId)
         .map(questionMapper::toResponse)
-        .orElseThrow(() -> appExceptionUtil.getAppException("", ""));
+        .orElseThrow(
+            () ->
+                appExceptionUtil.getAppException(
+                    "find.entity.failed.message", "find.entity.failed.code"));
   }
 
   @Override
@@ -66,7 +74,8 @@ public class QuestionServiceImpl implements QuestionService {
       questionRepository.save(question);
     } catch (Exception e) {
       log.error("save question entity exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getAppException("", "");
+      throw appExceptionUtil.getAppException(
+          "save.entity.failed.message", "save.entity.failed.message");
     }
   }
 
@@ -77,7 +86,8 @@ public class QuestionServiceImpl implements QuestionService {
         .findByIdAndSurvey(questionId, survey)
         .orElseThrow(
             () -> {
-              return appExceptionUtil.getAppException("", "");
+              return appExceptionUtil.getAppException(
+                  "find.entity.failed.message", "find.entity.failed.code");
             });
   }
 

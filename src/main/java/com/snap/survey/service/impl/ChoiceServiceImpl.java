@@ -26,7 +26,8 @@ public class ChoiceServiceImpl implements ChoiceService {
         .findByIdAndQuestionId(choiceId, questionId)
         .orElseThrow(
             () -> {
-              return appExceptionUtil.getAppException("", "");
+              return appExceptionUtil.getAppException(
+                  "find.entity.failed.message", "find.entity.failed.code");
             });
   }
 
@@ -46,7 +47,8 @@ public class ChoiceServiceImpl implements ChoiceService {
       choiceRepository.save(choice);
     } catch (Exception e) {
       log.error("save choice entity exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getAppException("", "");
+      throw appExceptionUtil.getAppException(
+          "save.entity.failed.message", "save.entity.failed.code");
     }
   }
 }

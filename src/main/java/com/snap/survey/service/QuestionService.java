@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface QuestionService {
 
+  long countBySurveySlug(String slug);
+
   Page<QuestionResponse> getByUserIdAndSurveySlug(Long userId, String slug, Pageable page);
 
   QuestionResponse getOne(Long userId, Long questionId);

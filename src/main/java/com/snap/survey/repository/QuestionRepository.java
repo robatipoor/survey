@@ -11,6 +11,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> {
+
+  @Query("SELECT COUNT(1) FROM QuestionEntity q INNER JOIN q.survey s WHERE s.slug = :slug")
+  long countBySurveySlug(String slug);
+
   boolean existsByIdAndSurvey(Long id, SurveyEntity survey);
 
   Optional<QuestionEntity> findByIdAndSurvey(Long id, SurveyEntity survey);

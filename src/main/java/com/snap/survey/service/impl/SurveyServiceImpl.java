@@ -1,10 +1,8 @@
 package com.snap.survey.service.impl;
 
 import com.snap.survey.entity.*;
-import com.snap.survey.mapper.AnswerMapper;
 import com.snap.survey.mapper.ChoiceMapper;
 import com.snap.survey.mapper.QuestionMapper;
-import com.snap.survey.mapper.SurveyMapper;
 import com.snap.survey.model.request.CreateSurveyRequest;
 import com.snap.survey.model.request.SubmitSurveyRequest;
 import com.snap.survey.model.response.CreateSurveyResponse;
@@ -34,8 +32,6 @@ public class SurveyServiceImpl implements SurveyService {
   private final ChoiceService choiceService;
   private final AppExceptionUtil appExceptionUtil;
   private final UserService userService;
-  private final SurveyMapper surveyResponseMapper;
-  private final AnswerMapper answerMapper;
   private final AnswerService answerService;
 
   public SurveyServiceImpl(
@@ -46,8 +42,6 @@ public class SurveyServiceImpl implements SurveyService {
       ChoiceService choiceService,
       AppExceptionUtil appExceptionUtil,
       UserService userService,
-      SurveyMapper surveyResponseMapper,
-      AnswerMapper answerMapper,
       AnswerService answerService) {
     this.surveyRepository = surveyRepository;
     this.questionMapper = questionMapper;
@@ -56,8 +50,6 @@ public class SurveyServiceImpl implements SurveyService {
     this.choiceService = choiceService;
     this.appExceptionUtil = appExceptionUtil;
     this.userService = userService;
-    this.surveyResponseMapper = surveyResponseMapper;
-    this.answerMapper = answerMapper;
     this.answerService = answerService;
   }
 
@@ -124,6 +116,11 @@ public class SurveyServiceImpl implements SurveyService {
     var user = userService.getByUserId(userId);
     var survey = getBySlug(slug);
     log.info("submit survey userId : {} surveyId : {}", userId, survey.getId());
+    if (request.answers().size() != questionService.countBySurveySlug(slug)) {
+      log.error("invalid request submitted ");
+      throw appExceptionUtil.getAppException(
+          "invalid.input.error.message", "invalid.input.error.code");
+    }
     request.answers().stream()
         .map(
             answer ->
@@ -157,7 +154,8 @@ public class SurveyServiceImpl implements SurveyService {
       surveyRepository.save(survey);
     } catch (Exception e) {
       log.error("save survey entity exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getAppException("", "");
+      throw appExceptionUtil.getAppException(
+          "save.entity.failed.message", "save.entity.failed.code");
     }
   }
 }
