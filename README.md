@@ -7,7 +7,7 @@ You can use these [instructions](https://medium.com/coding-blocks/creating-user-
 ```shell
 git clone https://github.com/robatipoor/survey
 cd survey
-./mvn spring-boot:run
+docker compose up
 # open browser 
 # go to http://127.0.0.1:8080/swagger-ui/index.html
 ```

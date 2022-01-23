@@ -1,8 +1,7 @@
 FROM eclipse-temurin:17.0.1_12-jdk-alpine AS builder
 WORKDIR /app
 COPY . ./
-RUN ./mvnw dependency:resolve
-RUN ./mvnw clean package
+RUN ./mvnw clean package -DskipTests
 
 FROM eclipse-temurin:17.0.1_12-jre-alpine
 WORKDIR /app

@@ -134,6 +134,9 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                        <layers>
+                            <enabled>true</enabled>
+                        </layers>
                 </configuration>
             </plugin>
             <plugin>
