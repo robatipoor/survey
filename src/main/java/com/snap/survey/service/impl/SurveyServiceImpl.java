@@ -57,7 +57,7 @@ public class SurveyServiceImpl implements SurveyService {
   @Override
   public CreateSurveyResponse create(Long userId, CreateSurveyRequest request) {
     var user = userService.getByUserId(userId);
-    var survey = createSurvey(request.title(), request.expireDays(), user);
+    var survey = createPartialSurvey(request.title(), request.expireDays(), user);
     this.save(survey);
     request.questions().stream()
         .map(
@@ -80,7 +80,7 @@ public class SurveyServiceImpl implements SurveyService {
   }
 
   @Override
-  public SurveyEntity createSurvey(String title, long expireDays, UserEntity user) {
+  public SurveyEntity createPartialSurvey(String title, long expireDays, UserEntity user) {
     var survey = new SurveyEntity();
     survey.setTitle(title);
     survey.setExpireDate(Instant.now().plus(expireDays, ChronoUnit.DAYS));

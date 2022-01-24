@@ -19,7 +19,7 @@ public interface SurveyService {
 
   void submit(Long userId, String slug, SubmitSurveyRequest request);
 
-  SurveyEntity createSurvey(String title, long expireDays, UserEntity user);
+  SurveyEntity createPartialSurvey(String title, long expireDays, UserEntity user);
 
   SurveyEntity getBySlugAndUserId(String slug, Long userId);
 

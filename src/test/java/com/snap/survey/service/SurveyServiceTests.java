@@ -101,7 +101,7 @@ public class SurveyServiceTests {
     var title = "title";
     var firstName = "fistName";
     var user = UserEntity.builder().firstName(firstName).build();
-    var survey = surveyService.createSurvey(title, 1, user);
+    var survey = surveyService.createPartialSurvey(title, 1, user);
     assertEquals(title, survey.getTitle());
     assertEquals(survey.getUser().getFirstName(), firstName);
     assertNotNull(survey.getSlug());

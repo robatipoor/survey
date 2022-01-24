@@ -1,9 +1,6 @@
 ## A java & spring survey application 
 A software similar to stackoverflow survey just for testing 
 ## How Run Application
-create user and postgres database based on config user password etc ...
-You can use these [instructions](https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e
-)
 ```shell
 git clone https://github.com/robatipoor/survey
 cd survey
@@ -91,3 +88,4 @@ curl -X 'GET' \
 2. add more unit and integrate test 
 3. add more exception handler
 4. add more logs
+5. complete readme file

@@ -24,7 +24,6 @@ public class AnswerServiceImpl implements AnswerService {
   private final AnswerMapper answerMapper;
   private final ChoiceService choiceService;
   private final AppExceptionUtil appExceptionUtil;
-  private final UserService userService;
   private final QuestionService questionService;
 
   public AnswerServiceImpl(
@@ -38,7 +37,6 @@ public class AnswerServiceImpl implements AnswerService {
     this.answerMapper = answerMapper;
     this.choiceService = choiceService;
     this.appExceptionUtil = appExceptionUtil;
-    this.userService = userService;
     this.questionService = questionService;
   }
 
