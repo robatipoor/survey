@@ -11,13 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class MapperTests {
+public class UserPrincipalMapperTests {
 
   private final UserPrincipalMapper userPrincipalMapper;
   private final RoleRepository roleRepository;
 
   @Autowired
-  public MapperTests(UserPrincipalMapper userPrincipalMapper, RoleRepository roleRepository) {
+  public UserPrincipalMapperTests(
+      UserPrincipalMapper userPrincipalMapper, RoleRepository roleRepository) {
     this.userPrincipalMapper = userPrincipalMapper;
     this.roleRepository = roleRepository;
   }

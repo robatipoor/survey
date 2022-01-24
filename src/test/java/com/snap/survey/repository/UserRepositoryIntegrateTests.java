@@ -18,8 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 public class UserRepositoryIntegrateTests {
 
-  @Autowired private UserRepository userRepository;
-  @Autowired private RoleRepository roleRepository;
+  private final UserRepository userRepository;
+  private final RoleRepository roleRepository;
+
+  @Autowired
+  public UserRepositoryIntegrateTests(
+      UserRepository userRepository, RoleRepository roleRepository) {
+    this.userRepository = userRepository;
+    this.roleRepository = roleRepository;
+  }
 
   @Test
   @Transactional

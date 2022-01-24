@@ -2,7 +2,7 @@ FROM maven:3.8.4-eclipse-temurin-17-alpine AS builder
 ENV HOME=/app
 WORKDIR $HOME
 ADD pom.xml $HOME
-RUN ["/usr/local/bin/mvn-entrypoint.sh", "mvn", "verify", "clean", "--fail-never"]
+RUN /usr/local/bin/mvn-entrypoint.sh mvn verify clean --fail-never
 ADD . $HOME
 RUN mvn package -DskipTests
 
