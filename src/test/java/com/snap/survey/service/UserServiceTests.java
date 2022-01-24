@@ -26,13 +26,27 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 public class UserServiceTests {
 
-  @Autowired private UserService userService;
-  @Autowired private UserRepository userRepository;
-  @Autowired private UserPrincipalMapper userPrincipalMapper;
-  @Autowired private TokenUtil tokenUtil;
-  @Autowired private PasswordEncoder passwordEncoder;
+  private final UserService userService;
+  private final UserRepository userRepository;
+  private final UserPrincipalMapper userPrincipalMapper;
+  private final TokenUtil tokenUtil;
+  private final PasswordEncoder passwordEncoder;
   RegisterRequest registerRequest =
       new RegisterRequest("first_name", "last_name", "username", "email", "password");
+
+  @Autowired
+  public UserServiceTests(
+      UserService userService,
+      UserRepository userRepository,
+      UserPrincipalMapper userPrincipalMapper,
+      TokenUtil tokenUtil,
+      PasswordEncoder passwordEncoder) {
+    this.userService = userService;
+    this.userRepository = userRepository;
+    this.userPrincipalMapper = userPrincipalMapper;
+    this.tokenUtil = tokenUtil;
+    this.passwordEncoder = passwordEncoder;
+  }
 
   @Test
   public void createUserEntityFromRequestIntegrateTest() {

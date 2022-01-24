@@ -24,7 +24,7 @@ public interface AnswerRepository extends JpaRepository<AnswerEntity, Long> {
   @Query(
       value =
           "SELECT COUNT(1) FROM ( "
-              + "SELECT s.slug,COUNT(s) FROM answers a INNER JOIN surveys s ON a.survey_id = s.id "
+              + "SELECT s.slug,COUNT(1) FROM answers a INNER JOIN surveys s ON a.survey_id = s.id "
               + "GROUP BY a.user_id,s.slug HAVING s.slug = :surveySlug) r ",
       nativeQuery = true)
   int countAllUserAnswerBySurveySlug(String surveySlug);
@@ -32,7 +32,7 @@ public interface AnswerRepository extends JpaRepository<AnswerEntity, Long> {
   @Query(
       value =
           "SELECT COUNT(1) FROM ( "
-              + "SELECT COUNT(s) co FROM answers a INNER JOIN surveys s ON a.survey_id = s.id "
+              + "SELECT COUNT(1) co FROM answers a INNER JOIN surveys s ON a.survey_id = s.id "
               + "GROUP BY a.user_id,s.slug,a.choice_id HAVING s.slug = :surveySlug AND a.choice_id = :choiceId) r ",
       nativeQuery = true)
   int countAllUserAnswerByIdAndSurveySlug(String surveySlug, Long choiceId);
