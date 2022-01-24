@@ -59,7 +59,7 @@ public class AdviceBaseController {
   })
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   BaseResponse<Void> invalidInputExceptionHandler(Exception ex) {
-    log.error("invalid input exception error message {}", ex.getMessage());
+    log.error("invalid input exception error message : {}", ex.getMessage());
     return responseUtil.getResponse("invalid.input.error.message", "invalid.input.error.code");
   }
 }

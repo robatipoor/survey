@@ -1,7 +1,10 @@
-FROM eclipse-temurin:17.0.1_12-jdk-alpine AS builder
-WORKDIR /app
-COPY . ./
-RUN ./mvnw clean package -DskipTests
+FROM maven:3.8.4-eclipse-temurin-17-alpine AS builder
+ENV HOME=/app
+WORKDIR $HOME
+ADD pom.xml $HOME
+RUN ["/usr/local/bin/mvn-entrypoint.sh", "mvn", "verify", "clean", "--fail-never"]
+ADD . $HOME
+RUN mvn package -DskipTests
 
 FROM eclipse-temurin:17.0.1_12-jre-alpine
 WORKDIR /app
