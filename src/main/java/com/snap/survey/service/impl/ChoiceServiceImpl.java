@@ -42,6 +42,7 @@ public class ChoiceServiceImpl implements ChoiceService {
     try {
       choiceRepository.save(choice);
     } catch (Exception e) {
+      e.printStackTrace();
       log.error("save choice entity exception error message : {}", e.getMessage());
       throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
     }

@@ -70,6 +70,7 @@ public class QuestionServiceImpl implements QuestionService {
     try {
       questionRepository.save(question);
     } catch (Exception e) {
+      e.printStackTrace();
       log.error("save question entity exception error message : {}", e.getMessage());
       throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
     }

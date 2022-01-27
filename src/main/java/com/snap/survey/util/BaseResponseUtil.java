@@ -58,6 +58,7 @@ public class BaseResponseUtil {
     try {
       return objectMapper.writeValueAsString(value);
     } catch (JsonProcessingException e) {
+      e.printStackTrace();
       log.error("json processing exception error message : {}", e.getMessage());
       throw appExceptionUtil.getSystemException("json.process.failed.error", e.getMessage());
     }

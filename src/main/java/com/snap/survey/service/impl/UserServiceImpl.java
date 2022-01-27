@@ -82,6 +82,7 @@ public class UserServiceImpl implements UserService {
       var result = userRepository.save(user);
       log.info("success new register userId : {}", result.getId());
     } catch (Exception e) {
+      e.printStackTrace();
       log.error("register user failed exception error message : {}", e.getMessage());
       throw appExceptionUtil.getSystemException("save.exception.error", e.getMessage());
     }

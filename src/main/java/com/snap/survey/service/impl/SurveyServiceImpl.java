@@ -146,6 +146,7 @@ public class SurveyServiceImpl implements SurveyService {
     try {
       surveyRepository.save(survey);
     } catch (Exception e) {
+      e.printStackTrace();
       log.error("save survey entity exception error message : {}", e.getMessage());
       throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
     }
