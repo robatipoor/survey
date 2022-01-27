@@ -33,9 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return userRepository
         .findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
         .map(userPrincipalMapper::toUserPrincipal)
-        .orElseThrow(
-            () ->
-                appExceptionUtil.getAppException(
-                    "user.not.exist.error.message", "user.not.exist.error.code"));
+        .orElseThrow(() -> appExceptionUtil.getBusinessException("user.not.exist.error"));
   }
 }

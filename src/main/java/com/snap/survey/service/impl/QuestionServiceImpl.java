@@ -61,10 +61,7 @@ public class QuestionServiceImpl implements QuestionService {
     return questionRepository
         .findByIdAndAdminUserId(questionId, userId)
         .map(questionMapper::toResponse)
-        .orElseThrow(
-            () ->
-                appExceptionUtil.getAppException(
-                    "find.entity.failed.message", "find.entity.failed.code"));
+        .orElseThrow(() -> appExceptionUtil.getBusinessException("find.entity.failed"));
   }
 
   @Override
@@ -74,8 +71,7 @@ public class QuestionServiceImpl implements QuestionService {
       questionRepository.save(question);
     } catch (Exception e) {
       log.error("save question entity exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getAppException(
-          "save.entity.failed.message", "save.entity.failed.message");
+      throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
     }
   }
 
@@ -84,11 +80,7 @@ public class QuestionServiceImpl implements QuestionService {
   public QuestionEntity getByQuestionIdAndSurvey(Long questionId, SurveyEntity survey) {
     return questionRepository
         .findByIdAndSurvey(questionId, survey)
-        .orElseThrow(
-            () -> {
-              return appExceptionUtil.getAppException(
-                  "find.entity.failed.message", "find.entity.failed.code");
-            });
+        .orElseThrow(() -> appExceptionUtil.getBusinessException("find.entity.failed"));
   }
 
   @Override

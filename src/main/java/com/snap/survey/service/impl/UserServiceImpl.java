@@ -55,10 +55,7 @@ public class UserServiceImpl implements UserService {
   public UserEntity getByUserId(Long userId) {
     return userRepository
         .findById(userId)
-        .orElseThrow(
-            () ->
-                appExceptionUtil.getAppException(
-                    "user.not.found.error.message", "user.not.found.error.code"));
+        .orElseThrow(() -> appExceptionUtil.getBusinessException("user.not.found.error"));
   }
 
   @Override
@@ -78,9 +75,7 @@ public class UserServiceImpl implements UserService {
   public void registerUser(RegisterRequest registerRequest) {
     if (userRepository.existsByUsernameOrEmail(
         registerRequest.username(), registerRequest.email())) {
-      throw appExceptionUtil.getAppException(
-          "email.or.username.already.exist.error.message",
-          "email.or.username.already.exist.error.code");
+      throw appExceptionUtil.getBusinessException("email.or.username.already.exist.error");
     }
     var user = createUserEntityFromRequest(registerRequest);
     try {
@@ -88,8 +83,7 @@ public class UserServiceImpl implements UserService {
       log.info("success new register userId : {}", result.getId());
     } catch (Exception e) {
       log.error("register user failed exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getAppException(
-          "save.exception.error.message", "save.exception.error.code");
+      throw appExceptionUtil.getSystemException("save.exception.error", e.getMessage());
     }
   }
 
@@ -103,8 +97,7 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(
                 () -> {
                   log.error("role not found");
-                  return appExceptionUtil.getAppException(
-                      "not.found.exception.error.message", "not.found.exception.error.code");
+                  return appExceptionUtil.getBusinessException("not.found.exception.error");
                 });
     user.setRoles(Set.of(role));
     // TODO active process

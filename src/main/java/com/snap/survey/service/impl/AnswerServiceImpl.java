@@ -52,10 +52,7 @@ public class AnswerServiceImpl implements AnswerService {
     return answerRepository
         .findByIdAndAdminUserId(answerId, userId)
         .map(answerMapper::toResponse)
-        .orElseThrow(
-            () ->
-                appExceptionUtil.getAppException(
-                    "find.entity.failed.message", "find.entity.failed.code"));
+        .orElseThrow(() -> appExceptionUtil.getBusinessException("find.entity.failed"));
   }
 
   @Override
@@ -87,8 +84,7 @@ public class AnswerServiceImpl implements AnswerService {
       answerRepository.save(answer);
     } catch (Exception e) {
       log.error("save answer entity exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getAppException(
-          "save.entity.failed.message", "save.entity.failed.message");
+      throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
     }
   }
 

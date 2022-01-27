@@ -29,7 +29,7 @@ public class AdviceBaseController {
   @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
   BaseResponse<Void> baseExceptionHandler(AppException ex) {
     log.error("app exception error message : {}", ex.getMessage());
-    return new BaseResponse<>(ex.getErrorCode(), ex.getMessage(), null);
+    return responseUtil.getFailureResponse(ex.getErrorType());
   }
 
   @ResponseBody
@@ -37,7 +37,7 @@ public class AdviceBaseController {
   @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
   BaseResponse<Void> accessDeniedExceptionHandler(AccessDeniedException ex) {
     log.error("access denied exception error message : {}", ex.getMessage());
-    return responseUtil.getResponse("access.denied.error.message", "access.denied.error.code");
+    return responseUtil.getBusinessErrorFailureResponse("access.denied.error");
   }
 
   @ResponseBody
@@ -48,7 +48,7 @@ public class AdviceBaseController {
         "unexpected exception : {} error message : {}",
         ex.getClass().getCanonicalName(),
         ex.getMessage());
-    return responseUtil.getResponse("unexpected.error.message", "unexpected.error.code");
+    return responseUtil.getSystemErrorFailureResponse("unexpected.error", ex.getMessage());
   }
 
   @ResponseBody
@@ -60,6 +60,6 @@ public class AdviceBaseController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   BaseResponse<Void> invalidInputExceptionHandler(Exception ex) {
     log.error("invalid input exception error message : {}", ex.getMessage());
-    return responseUtil.getResponse("invalid.input.error.message", "invalid.input.error.code");
+    return responseUtil.getBusinessErrorFailureResponse("invalid.input.error");
   }
 }

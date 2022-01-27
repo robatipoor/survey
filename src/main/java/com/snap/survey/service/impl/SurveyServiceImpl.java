@@ -118,8 +118,7 @@ public class SurveyServiceImpl implements SurveyService {
     log.info("submit survey userId : {} surveyId : {}", userId, survey.getId());
     if (request.answers().size() != questionService.countBySurveySlug(slug)) {
       log.error("invalid request submitted ");
-      throw appExceptionUtil.getAppException(
-          "invalid.input.error.message", "invalid.input.error.code");
+      throw appExceptionUtil.getBusinessException("invalid.input.error");
     }
     request.answers().stream()
         .map(
@@ -132,20 +131,14 @@ public class SurveyServiceImpl implements SurveyService {
   public SurveyEntity getBySlugAndUserId(String slug, Long userId) {
     return surveyRepository
         .findBySlugAndUserId(slug, userId)
-        .orElseThrow(
-            () ->
-                appExceptionUtil.getAppException(
-                    "user.not.found.error.message", "user.not.found.error.code"));
+        .orElseThrow(() -> appExceptionUtil.getBusinessException("survey.not.found.error"));
   }
 
   @Override
   public SurveyEntity getBySlug(String slug) {
     return surveyRepository
         .findBySlug(slug)
-        .orElseThrow(
-            () ->
-                appExceptionUtil.getAppException(
-                    "user.not.found.error.message", "user.not.found.error.code"));
+        .orElseThrow(() -> appExceptionUtil.getBusinessException("survey.not.found.error"));
   }
 
   @Override
@@ -154,8 +147,7 @@ public class SurveyServiceImpl implements SurveyService {
       surveyRepository.save(survey);
     } catch (Exception e) {
       log.error("save survey entity exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getAppException(
-          "save.entity.failed.message", "save.entity.failed.code");
+      throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
     }
   }
 }

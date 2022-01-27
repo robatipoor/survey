@@ -24,7 +24,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
   @PostConstruct
   public void init() {
     this.responseBody =
-        baseResponseUtil.getResponseAsJson("unauthorized.error.message", "unauthorized.error.code");
+        baseResponseUtil.getBusinessErrorFailureResponseAsJson("unauthorized.error");
   }
 
   @Override

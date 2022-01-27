@@ -2,62 +2,64 @@ package com.snap.survey.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snap.survey.model.ErrorType;
 import com.snap.survey.model.response.BaseResponse;
-import java.util.Locale;
+import com.snap.survey.model.response.ResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class BaseResponseUtil {
 
-  private final MessageSource messageSource;
-  private final Locale defaultLocale = Locale.getDefault();
+  private final MessageUtil messageUtil;
   private final ObjectMapper objectMapper;
   private final AppExceptionUtil appExceptionUtil;
 
   @Autowired
   public BaseResponseUtil(
-      MessageSource messageSource, ObjectMapper objectMapper, AppExceptionUtil appExceptionUtil) {
-    this.messageSource = messageSource;
+      MessageUtil messageUtil, ObjectMapper objectMapper, AppExceptionUtil appExceptionUtil) {
+    this.messageUtil = messageUtil;
     this.objectMapper = objectMapper;
     this.appExceptionUtil = appExceptionUtil;
   }
 
-  public BaseResponse<Void> getResponse(String messageKey, String errorKey) {
-    var message = messageSource.getMessage(messageKey, null, defaultLocale);
-    var errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
-    return new BaseResponse<>(errorCode, message, null);
+  public BaseResponse<Void> getFailureResponse(ErrorType errorType) {
+    return new BaseResponse<>(new ResponseStatus.Failure(errorType), null);
   }
 
-  public BaseResponse<Void> getResponse(String messageKey, Object[] args, String errorKey) {
-    var message = messageSource.getMessage(messageKey, args, defaultLocale);
-    var errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
-    return new BaseResponse<>(errorCode, message, null);
+  public BaseResponse<Void> getBusinessErrorFailureResponse(String key) {
+    var value = messageUtil.get(key);
+    return new BaseResponse<>(
+        new ResponseStatus.Failure(
+            new ErrorType.BusinessError(value.getFirst(), value.getSecond())),
+        null);
+  }
+
+  public BaseResponse<Void> getSystemErrorFailureResponse(String key, String debugInfo) {
+    var value = messageUtil.get(key);
+    return new BaseResponse<>(
+        new ResponseStatus.Failure(
+            new ErrorType.SystemError(value.getFirst(), value.getSecond(), debugInfo)),
+        null);
   }
 
   public <T> BaseResponse<T> getSuccessResponse(T data) {
-    return getResponse("success.message", "success.code", data);
+    return new BaseResponse<>(new ResponseStatus.Success(), data);
   }
 
-  public <T> BaseResponse<T> getResponse(String messageKey, String errorKey, T data) {
-    var message = messageSource.getMessage(messageKey, null, defaultLocale);
-    var errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
-    return new BaseResponse<>(errorCode, message, data);
+  public <T> BaseResponse<T> getSuccessResponse() {
+    return new BaseResponse<>(new ResponseStatus.Success(), null);
   }
 
-  public String getResponseAsJson(String messageKey, String errorKey) {
-    var message = messageSource.getMessage(messageKey, null, defaultLocale);
-    var errorCode = Integer.valueOf(messageSource.getMessage(errorKey, null, defaultLocale));
-    BaseResponse<Void> generalResponse = new BaseResponse<>(errorCode, message, null);
+  public String getBusinessErrorFailureResponseAsJson(String key) {
+    var value = getBusinessErrorFailureResponse(key);
     try {
-      return objectMapper.writeValueAsString(generalResponse);
+      return objectMapper.writeValueAsString(value);
     } catch (JsonProcessingException e) {
       log.error("json processing exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getAppException(
-          "json.process.failed.error.message", "json.process.failed.error.code");
+      throw appExceptionUtil.getSystemException("json.process.failed.error", e.getMessage());
     }
   }
 }

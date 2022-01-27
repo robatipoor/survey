@@ -1,27 +1,30 @@
 package com.snap.survey.util;
 
 import com.snap.survey.exception.AppException;
-import java.util.Locale;
+import com.snap.survey.model.ErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class AppExceptionUtil {
 
-  private final Locale defaultLocale = Locale.getDefault();
-  private final MessageSource messageSource;
+  private final MessageUtil messageUtil;
 
   @Autowired
-  public AppExceptionUtil(MessageSource messageSource) {
-    this.messageSource = messageSource;
+  public AppExceptionUtil(MessageUtil messageUtil) {
+    this.messageUtil = messageUtil;
   }
 
-  public AppException getAppException(String messageKey, String errorKey) {
-    var message = messageSource.getMessage(messageKey, null, defaultLocale);
-    var errorCode = Integer.parseInt(messageSource.getMessage(errorKey, null, defaultLocale));
-    return new AppException(message, errorCode);
+  public AppException getSystemException(String key, String debugInfo) {
+    var value = messageUtil.get(key);
+    return new AppException(
+        new ErrorType.SystemError(value.getFirst(), value.getSecond(), debugInfo));
+  }
+
+  public AppException getBusinessException(String key) {
+    var value = messageUtil.get(key);
+    return new AppException(new ErrorType.BusinessError(value.getFirst(), value.getSecond()));
   }
 }
