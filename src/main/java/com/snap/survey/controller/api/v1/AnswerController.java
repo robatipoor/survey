@@ -8,6 +8,7 @@ import com.snap.survey.service.AnswerService;
 import com.snap.survey.util.BaseResponseUtil;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Validated
 @RequestMapping("/api/v1/answer")
+@Slf4j
 public class AnswerController {
 
   private final BaseResponseUtil baseResponseUtil;
@@ -37,6 +39,7 @@ public class AnswerController {
   public ResponseEntity<BaseResponse<Page<AnswerResponse>>> getPageByAdmin(
       Authentication authentication, @NotEmpty @PathVariable String slug, Pageable page) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    log.info("receive request get one page slug : {} userId : {} ", slug, userId);
     var response = answerService.getPage(userId, slug, page);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
@@ -46,6 +49,7 @@ public class AnswerController {
   public ResponseEntity<BaseResponse<AnswerResponse>> getOneByAdmin(
       Authentication authentication, @NotNull @PathVariable Long id) {
     Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    log.info("receive request get one answerId : {} userId : {} ", id, userId);
     var response = answerService.getOne(userId, id);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }

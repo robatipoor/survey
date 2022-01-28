@@ -40,4 +40,6 @@ public class UserController {
     userService.registerUser(registerRequest);
     return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(null));
   }
+
+  // TODO update user
 }
