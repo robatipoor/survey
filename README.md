@@ -87,5 +87,4 @@ curl -X 'GET' \
 1. for security reason we can use uuid instead of sequence number id
 2. add more unit and integrate test 
 3. add more exception handler
-4. add more logs
-5. complete readme file
+4. complete readme file

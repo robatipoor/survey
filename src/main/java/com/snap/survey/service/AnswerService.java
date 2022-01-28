@@ -19,7 +19,7 @@ public interface AnswerService {
 
   AnswerEntity createAnswer(Long choiceId, Long questionId, SurveyEntity survey, UserEntity user);
 
-  void save(AnswerEntity answer);
+  Long save(AnswerEntity answer);
 
   Page<AnswerResultResponse> getResultResponse(String surveySlug, Pageable page);
 }

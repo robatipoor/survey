@@ -14,6 +14,7 @@ import com.snap.survey.util.AppExceptionUtil;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -117,7 +118,7 @@ public class SurveyServiceImpl implements SurveyService {
     var survey = getBySlug(slug);
     log.info("submit survey userId : {} surveyId : {}", userId, survey.getId());
     if (request.answers().size() != questionService.countBySurveySlug(slug)) {
-      log.error("invalid request submitted ");
+      log.debug("invalid request submitted by userId : {} request : {}", userId, request);
       throw appExceptionUtil.getBusinessException("invalid.input.error");
     }
     request.answers().stream()
@@ -142,13 +143,29 @@ public class SurveyServiceImpl implements SurveyService {
   }
 
   @Override
-  public void save(SurveyEntity survey) {
+  @Transactional
+  public Long save(SurveyEntity survey) {
     try {
-      surveyRepository.save(survey);
+      var result = surveyRepository.save(survey);
+      log.info("success save surveyId : {}", result.getId());
+      return result.getId();
     } catch (Exception e) {
       e.printStackTrace();
-      log.error("save survey entity exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
+      log.error("save survey failed exception error message : {}", e.getMessage());
+      throw appExceptionUtil.getSystemException("save.exception.error", e.getMessage());
     }
+  }
+
+  @Override
+  @Transactional
+  public void update(Long surveyId, Function<SurveyEntity, SurveyEntity> func) {
+    surveyRepository
+        .findById(surveyId)
+        .map(func)
+        .ifPresent(
+            survey -> {
+              this.save(survey);
+              log.info("success update surveyId : {}", survey);
+            });
   }
 }

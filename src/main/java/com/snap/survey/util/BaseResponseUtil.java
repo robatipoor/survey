@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snap.survey.model.ErrorType;
 import com.snap.survey.model.response.BaseResponse;
 import com.snap.survey.model.response.ResponseStatus;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,6 +29,12 @@ public class BaseResponseUtil {
 
   public BaseResponse<Void> getFailureResponse(ErrorType errorType) {
     return new BaseResponse<>(new ResponseStatus.Failure(errorType), null);
+  }
+
+  public BaseResponse<Void> getFailureResponse(
+      String key, Function<Pair<Integer, String>, ErrorType> createErrorFunc) {
+    var value = messageUtil.get(key);
+    return new BaseResponse<>(new ResponseStatus.Failure(createErrorFunc.apply(value)), null);
   }
 
   public BaseResponse<Void> getBusinessErrorFailureResponse(String key) {

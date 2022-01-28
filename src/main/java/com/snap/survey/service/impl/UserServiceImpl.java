@@ -14,6 +14,7 @@ import com.snap.survey.service.UserService;
 import com.snap.survey.util.AppExceptionUtil;
 import com.snap.survey.util.TokenUtil;
 import java.util.Set;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -78,14 +79,7 @@ public class UserServiceImpl implements UserService {
       throw appExceptionUtil.getBusinessException("email.or.username.already.exist.error");
     }
     var user = createUserEntityFromRequest(registerRequest);
-    try {
-      var result = userRepository.save(user);
-      log.info("success new register userId : {}", result.getId());
-    } catch (Exception e) {
-      e.printStackTrace();
-      log.error("register user failed exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getSystemException("save.exception.error", e.getMessage());
-    }
+    this.save(user);
   }
 
   @Override
@@ -104,5 +98,31 @@ public class UserServiceImpl implements UserService {
     // TODO active process
     user.setActivated(true);
     return user;
+  }
+
+  @Override
+  @Transactional
+  public Long save(UserEntity user) {
+    try {
+      var result = userRepository.save(user);
+      log.info("success save userId : {}", result.getId());
+      return result.getId();
+    } catch (Exception e) {
+      e.printStackTrace();
+      log.error("save user entity failed exception error message : {}", e.getMessage());
+      throw appExceptionUtil.getSystemException("save.exception.error", e.getMessage());
+    }
+  }
+
+  @Transactional
+  public void update(Long userId, Function<UserEntity, UserEntity> func) {
+    userRepository
+        .findById(userId)
+        .map(func)
+        .ifPresent(
+            user -> {
+              this.save(user);
+              log.info("success update userId : {}", userId);
+            });
   }
 }

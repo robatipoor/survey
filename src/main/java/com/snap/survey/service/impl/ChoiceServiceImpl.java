@@ -5,8 +5,10 @@ import com.snap.survey.repository.ChoiceRepository;
 import com.snap.survey.service.ChoiceService;
 import com.snap.survey.util.AppExceptionUtil;
 import java.util.List;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -38,13 +40,29 @@ public class ChoiceServiceImpl implements ChoiceService {
   }
 
   @Override
-  public void save(ChoiceEntity choice) {
+  @Transactional
+  public Long save(ChoiceEntity choice) {
     try {
-      choiceRepository.save(choice);
+      var result = choiceRepository.save(choice);
+      log.info("success save choiceId : {}", result.getId());
+      return result.getId();
     } catch (Exception e) {
       e.printStackTrace();
       log.error("save choice entity exception error message : {}", e.getMessage());
       throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
     }
+  }
+
+  //  @Override
+  @Transactional
+  public void update(Long choiceId, Function<ChoiceEntity, ChoiceEntity> func) {
+    choiceRepository
+        .findById(choiceId)
+        .map(func)
+        .ifPresent(
+            choice -> {
+              this.save(choice);
+              log.info("success update userId : {}", choiceId);
+            });
   }
 }

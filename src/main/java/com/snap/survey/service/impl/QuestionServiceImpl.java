@@ -7,6 +7,7 @@ import com.snap.survey.model.response.QuestionResponse;
 import com.snap.survey.repository.QuestionRepository;
 import com.snap.survey.service.QuestionService;
 import com.snap.survey.util.AppExceptionUtil;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,18 +67,6 @@ public class QuestionServiceImpl implements QuestionService {
 
   @Override
   @Transactional
-  public void save(QuestionEntity question) {
-    try {
-      questionRepository.save(question);
-    } catch (Exception e) {
-      e.printStackTrace();
-      log.error("save question entity exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
-    }
-  }
-
-  @Override
-  @Transactional
   public QuestionEntity getByQuestionIdAndSurvey(Long questionId, SurveyEntity survey) {
     return questionRepository
         .findByIdAndSurvey(questionId, survey)
@@ -87,5 +76,32 @@ public class QuestionServiceImpl implements QuestionService {
   @Override
   public boolean existsByQuestionIdAndSurvey(Long questionId, SurveyEntity survey) {
     return questionRepository.existsByIdAndSurvey(questionId, survey);
+  }
+
+  @Override
+  @Transactional
+  public Long save(QuestionEntity question) {
+    try {
+      var result = questionRepository.save(question);
+      log.info("success save questionId : {}", result.getId());
+      return result.getId();
+    } catch (Exception e) {
+      e.printStackTrace();
+      log.error("save question failed exception error message : {}", e.getMessage());
+      throw appExceptionUtil.getSystemException("save.exception.error", e.getMessage());
+    }
+  }
+
+  @Override
+  @Transactional
+  public void update(Long questionId, Function<QuestionEntity, QuestionEntity> func) {
+    questionRepository
+        .findById(questionId)
+        .map(func)
+        .ifPresent(
+            question -> {
+              this.save(question);
+              log.info("success update questionId : {}", questionId);
+            });
   }
 }

@@ -9,6 +9,7 @@ import com.snap.survey.repository.AnswerRepository;
 import com.snap.survey.service.*;
 import com.snap.survey.util.AppExceptionUtil;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -79,17 +80,6 @@ public class AnswerServiceImpl implements AnswerService {
 
   @Override
   @Transactional
-  public void save(AnswerEntity answer) {
-    try {
-      answerRepository.save(answer);
-    } catch (Exception e) {
-      log.error("save answer entity exception error message : {}", e.getMessage());
-      throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
-    }
-  }
-
-  @Override
-  @Transactional
   public Page<AnswerResultResponse> getResultResponse(String surveySlug, Pageable page) {
     var numberOfParticipants = getNumberOfParticipants(surveySlug);
     return questionService
@@ -108,6 +98,32 @@ public class AnswerServiceImpl implements AnswerService {
                           })
                       .collect(Collectors.toList());
               return new AnswerResultResponse(question.getId(), question.getContent(), answers);
+            });
+  }
+
+  @Override
+  @Transactional
+  public Long save(AnswerEntity answer) {
+    try {
+      var result = answerRepository.save(answer);
+      log.info("success save answerId : {}", result.getId());
+      return result.getId();
+    } catch (Exception e) {
+      e.printStackTrace();
+      log.error("save answer entity exception error message : {}", e.getMessage());
+      throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
+    }
+  }
+  // @Override
+  @Transactional
+  public void update(Long answerId, Function<AnswerEntity, AnswerEntity> func) {
+    answerRepository
+        .findById(answerId)
+        .map(func)
+        .ifPresent(
+            answer -> {
+              this.save(answer);
+              log.info("success update answerId : {}", answerId);
             });
   }
 }

@@ -2,6 +2,7 @@ package com.snap.survey.service;
 
 import com.snap.survey.entity.ChoiceEntity;
 import java.util.List;
+import java.util.function.Function;
 
 public interface ChoiceService {
   ChoiceEntity getByIdAndQuestionId(Long choiceId, Long questionId);
@@ -10,5 +11,7 @@ public interface ChoiceService {
 
   List<ChoiceEntity> getAllByQuestionId(Long questionId);
 
-  void save(ChoiceEntity choice);
+  Long save(ChoiceEntity choice);
+
+  void update(Long choiceId, Function<ChoiceEntity, ChoiceEntity> func);
 }

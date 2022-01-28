@@ -7,6 +7,7 @@ import com.snap.survey.model.request.SubmitSurveyRequest;
 import com.snap.survey.model.response.CreateSurveyResponse;
 import com.snap.survey.model.response.ResultSurveyResponse;
 import com.snap.survey.model.response.SurveyResponse;
+import java.util.function.Function;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,5 +26,7 @@ public interface SurveyService {
 
   SurveyEntity getBySlug(String slug);
 
-  void save(SurveyEntity survey);
+  Long save(SurveyEntity survey);
+
+  void update(Long surveyId, Function<SurveyEntity, SurveyEntity> func);
 }
