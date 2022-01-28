@@ -50,7 +50,7 @@ curl -X 'POST' \
   ]
 }'
 # create survey link and share to users
-# {base-url}/api/v1/question/{survey-slug}
+# {base-url}/api/v1/survey/{survey-slug}
 # users can submit survey with sample request
 curl -X 'POST' \
   'http://127.0.0.1:8080/api/v1/survey/submit/{survey-slug}' \
@@ -78,6 +78,9 @@ curl -X 'GET' \
 ./mvn clean package 
 ## install git code format hook
 ./mvnw git-code-format:install-hooks
+## run test
+./mvn test
+## 
 ```
 ## Entity Relationship Diagram
 
@@ -87,4 +90,5 @@ curl -X 'GET' \
 1. for security reason we can use uuid instead of sequence number id
 2. add more unit and integrate test 
 3. add more exception handler
-4. complete readme file
+4. complete readme file and docs
+5. fix docker build version

@@ -6,6 +6,7 @@ import com.snap.survey.mapper.QuestionMapper;
 import com.snap.survey.model.request.CreateSurveyRequest;
 import com.snap.survey.model.request.SubmitSurveyRequest;
 import com.snap.survey.model.response.CreateSurveyResponse;
+import com.snap.survey.model.response.QuestionResponse;
 import com.snap.survey.model.response.ResultSurveyResponse;
 import com.snap.survey.model.response.SurveyResponse;
 import com.snap.survey.repository.SurveyRepository;
@@ -105,10 +106,10 @@ public class SurveyServiceImpl implements SurveyService {
   @Override
   public ResultSurveyResponse getResult(Long userId, String surveySlug, Pageable page) {
     var survey = getBySlugAndUserId(surveySlug, userId);
-    var isFinished = survey.getExpireDate().isBefore(Instant.now());
+    var isExpired = this.isExpire(survey.getExpireDate());
     var numberOfParticipants = answerService.getNumberOfParticipants(surveySlug);
     var results = answerService.getResultResponse(survey.getSlug(), page);
-    return new ResultSurveyResponse(survey.getTitle(), isFinished, results, numberOfParticipants);
+    return new ResultSurveyResponse(survey.getTitle(), isExpired, results, numberOfParticipants);
   }
 
   @Transactional
@@ -117,15 +118,24 @@ public class SurveyServiceImpl implements SurveyService {
     var user = userService.getByUserId(userId);
     var survey = getBySlug(slug);
     log.info("submit survey userId : {} surveyId : {}", userId, survey.getId());
+    if (this.isExpire(survey.getExpireDate())) {
+      log.debug("survey is expired : {} ", slug);
+      throw appExceptionUtil.getBusinessException("survey.expire.error");
+    }
     if (request.answers().size() != questionService.countBySurveySlug(slug)) {
       log.debug("invalid request submitted by userId : {} request : {}", userId, request);
       throw appExceptionUtil.getBusinessException("invalid.input.error");
     }
+    // TODO if user submit more than one throws exception
     request.answers().stream()
         .map(
             answer ->
                 answerService.createAnswer(answer.choiceId(), answer.questionId(), survey, user))
         .forEach(answerService::save);
+  }
+
+  public boolean isExpire(Instant expireDate) {
+    return expireDate.isBefore(Instant.now());
   }
 
   @Override
@@ -167,5 +177,17 @@ public class SurveyServiceImpl implements SurveyService {
               this.save(survey);
               log.info("success update surveyId : {}", survey);
             });
+  }
+
+  @Override
+  public Page<QuestionResponse> readQuestion(String slug, Pageable page) {
+    var survey =
+        surveyRepository
+            .findBySlug(slug)
+            .orElseThrow(() -> appExceptionUtil.getBusinessException("survey.not.found.error"));
+    if (this.isExpire(survey.getExpireDate())) {
+      throw appExceptionUtil.getBusinessException("survey.expire.error");
+    }
+    return questionService.getBySurveySlug(slug, page);
   }
 }

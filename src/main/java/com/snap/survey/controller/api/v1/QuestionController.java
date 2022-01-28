@@ -34,15 +34,6 @@ public class QuestionController {
     this.questionService = questionService;
   }
 
-  @GetMapping("/{slug}")
-  public ResponseEntity<BaseResponse<Page<QuestionResponse>>> getPage(
-      Authentication authentication, @NotEmpty @PathVariable String slug, Pageable page) {
-    Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
-    log.info("receive request get page question userId : {} slug : {}", userId, slug);
-    var response = questionService.getBySurveySlug(slug, page);
-    return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
-  }
-
   @GetMapping("/one/{id}")
   @PreAuthorize(Constants.ADMIN)
   public ResponseEntity<BaseResponse<QuestionResponse>> getOneByAdmin(

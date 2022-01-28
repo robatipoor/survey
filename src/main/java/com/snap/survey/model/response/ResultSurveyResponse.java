@@ -5,6 +5,6 @@ import org.springframework.data.domain.Page;
 
 public record ResultSurveyResponse(
     String title,
-    @JsonProperty("is_finished") boolean isFinished,
+    @JsonProperty("is_expired") boolean isExpired,
     Page<AnswerResultResponse> results,
     @JsonProperty("number_of_participants") int numberOfParticipants) {}

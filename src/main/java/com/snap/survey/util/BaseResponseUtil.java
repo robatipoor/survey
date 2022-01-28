@@ -54,11 +54,11 @@ public class BaseResponseUtil {
   }
 
   public <T> BaseResponse<T> getSuccessResponse(T data) {
-    return new BaseResponse<>(new ResponseStatus.Success(), data);
+    return new BaseResponse<>(new ResponseStatus.Success("ok"), data);
   }
 
   public <T> BaseResponse<T> getSuccessResponse() {
-    return new BaseResponse<>(new ResponseStatus.Success(), null);
+    return new BaseResponse<>(new ResponseStatus.Success("ok"), null);
   }
 
   public String getBusinessErrorFailureResponseAsJson(String key) {

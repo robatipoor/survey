@@ -4,10 +4,7 @@ import com.snap.survey.config.Constants;
 import com.snap.survey.model.UserPrincipal;
 import com.snap.survey.model.request.CreateSurveyRequest;
 import com.snap.survey.model.request.SubmitSurveyRequest;
-import com.snap.survey.model.response.BaseResponse;
-import com.snap.survey.model.response.CreateSurveyResponse;
-import com.snap.survey.model.response.ResultSurveyResponse;
-import com.snap.survey.model.response.SurveyResponse;
+import com.snap.survey.model.response.*;
 import com.snap.survey.service.SurveyService;
 import com.snap.survey.util.BaseResponseUtil;
 import javax.validation.Valid;
@@ -33,6 +30,15 @@ public class SurveyController {
   public SurveyController(BaseResponseUtil baseResponseUtil, SurveyService surveyService) {
     this.baseResponseUtil = baseResponseUtil;
     this.surveyService = surveyService;
+  }
+
+  @GetMapping("/{slug}")
+  public ResponseEntity<BaseResponse<Page<QuestionResponse>>> readQuestion(
+      Authentication authentication, @NotEmpty @PathVariable String slug, Pageable page) {
+    Long userId = ((UserPrincipal) authentication.getPrincipal()).getId();
+    log.info("receive request read question userId : {} slug : {}", userId, slug);
+    var response = surveyService.readQuestion(slug, page);
+    return ResponseEntity.ok(baseResponseUtil.getSuccessResponse(response));
   }
 
   @PostMapping("/create")

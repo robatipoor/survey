@@ -5,6 +5,7 @@ import com.snap.survey.entity.UserEntity;
 import com.snap.survey.model.request.CreateSurveyRequest;
 import com.snap.survey.model.request.SubmitSurveyRequest;
 import com.snap.survey.model.response.CreateSurveyResponse;
+import com.snap.survey.model.response.QuestionResponse;
 import com.snap.survey.model.response.ResultSurveyResponse;
 import com.snap.survey.model.response.SurveyResponse;
 import java.util.function.Function;
@@ -29,4 +30,6 @@ public interface SurveyService {
   Long save(SurveyEntity survey);
 
   void update(Long surveyId, Function<SurveyEntity, SurveyEntity> func);
+
+  Page<QuestionResponse> readQuestion(String slug, Pageable page);
 }

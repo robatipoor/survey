@@ -5,6 +5,7 @@ import com.snap.survey.entity.SurveyEntity;
 import com.snap.survey.mapper.QuestionMapper;
 import com.snap.survey.model.response.QuestionResponse;
 import com.snap.survey.repository.QuestionRepository;
+import com.snap.survey.repository.SurveyRepository;
 import com.snap.survey.service.QuestionService;
 import com.snap.survey.util.AppExceptionUtil;
 import java.util.function.Function;
@@ -19,14 +20,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class QuestionServiceImpl implements QuestionService {
 
   private final QuestionRepository questionRepository;
+  private final SurveyRepository surveyRepository;
   private final QuestionMapper questionMapper;
   private final AppExceptionUtil appExceptionUtil;
 
   public QuestionServiceImpl(
       QuestionRepository questionRepository,
+      SurveyRepository surveyRepository,
       QuestionMapper questionMapper,
       AppExceptionUtil appExceptionUtil) {
     this.questionRepository = questionRepository;
+    this.surveyRepository = surveyRepository;
     this.questionMapper = questionMapper;
     this.appExceptionUtil = appExceptionUtil;
   }
