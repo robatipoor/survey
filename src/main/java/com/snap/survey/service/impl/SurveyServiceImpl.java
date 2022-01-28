@@ -73,7 +73,8 @@ public class SurveyServiceImpl implements SurveyService {
             pair -> {
               var question = pair.getFirst();
               var choices = pair.getSecond();
-              questionService.save(question);
+              var result = questionService.save(question);
+              log.info("success create questionId : {}", result);
               choices.stream()
                   .peek(choice -> choice.setQuestion(question))
                   .forEach(choiceService::save);
@@ -98,7 +99,7 @@ public class SurveyServiceImpl implements SurveyService {
         .findAllByUser(user, page)
         .map(
             surveyEntity -> {
-              boolean isExpired = surveyEntity.getExpireDate().isBefore(Instant.now());
+              boolean isExpired = this.isExpire(surveyEntity.getExpireDate());
               return new SurveyResponse(surveyEntity.getTitle(), surveyEntity.getSlug(), isExpired);
             });
   }
@@ -126,7 +127,7 @@ public class SurveyServiceImpl implements SurveyService {
       log.debug("invalid request submitted by userId : {} request : {}", userId, request);
       throw appExceptionUtil.getBusinessException("invalid.input.error");
     }
-    // TODO if user submit more than one throws exception
+    // TODO if user submit survey more than one throws exception
     request.answers().stream()
         .map(
             answer ->

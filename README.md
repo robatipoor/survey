@@ -7,6 +7,8 @@ cd survey
 docker compose up
 # open browser 
 # go to http://127.0.0.1:8080/swagger-ui/index.html
+## the springdoc-openapi lib seems to have a bug 
+## https://github.com/springdoc/springdoc-openapi/issues/1266
 ```
 
 ## Basic Usage API
