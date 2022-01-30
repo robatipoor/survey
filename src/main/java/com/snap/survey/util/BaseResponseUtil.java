@@ -7,7 +7,6 @@ import com.snap.survey.model.response.BaseResponse;
 import com.snap.survey.model.response.ResponseStatus;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +18,6 @@ public class BaseResponseUtil {
   private final ObjectMapper objectMapper;
   private final AppExceptionUtil appExceptionUtil;
 
-  @Autowired
   public BaseResponseUtil(
       MessageUtil messageUtil, ObjectMapper objectMapper, AppExceptionUtil appExceptionUtil) {
     this.messageUtil = messageUtil;

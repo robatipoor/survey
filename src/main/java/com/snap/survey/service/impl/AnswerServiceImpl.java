@@ -2,15 +2,11 @@ package com.snap.survey.service.impl;
 
 import com.snap.survey.entity.*;
 import com.snap.survey.mapper.AnswerMapper;
-import com.snap.survey.model.response.AnswerChoiceResultResponse;
 import com.snap.survey.model.response.AnswerResponse;
-import com.snap.survey.model.response.AnswerResultResponse;
 import com.snap.survey.repository.AnswerRepository;
 import com.snap.survey.service.*;
 import com.snap.survey.util.AppExceptionUtil;
-import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,29 +76,6 @@ public class AnswerServiceImpl implements AnswerService {
 
   @Override
   @Transactional
-  public Page<AnswerResultResponse> getResultResponse(String surveySlug, Pageable page) {
-    var numberOfParticipants = getNumberOfParticipants(surveySlug);
-    return questionService
-        .getEntityBySurveySlug(surveySlug, page)
-        .map(
-            question -> {
-              List<AnswerChoiceResultResponse> answers =
-                  choiceService.getAllByQuestionId(question.getId()).stream()
-                      .map(
-                          choice -> {
-                            var numberParticipantsChoice =
-                                getNumberOfParticipantsChoice(surveySlug, choice.getId());
-                            var percentage = numberParticipantsChoice * 100 / numberOfParticipants;
-                            return new AnswerChoiceResultResponse(
-                                choice.getNumber(), choice.getContent(), percentage);
-                          })
-                      .collect(Collectors.toList());
-              return new AnswerResultResponse(question.getId(), question.getContent(), answers);
-            });
-  }
-
-  @Override
-  @Transactional
   public Long save(AnswerEntity answer) {
     try {
       var result = answerRepository.save(answer);
@@ -114,6 +87,7 @@ public class AnswerServiceImpl implements AnswerService {
       throw appExceptionUtil.getSystemException("save.entity.failed", e.getMessage());
     }
   }
+
   // @Override
   @Transactional
   public void update(Long answerId, Function<AnswerEntity, AnswerEntity> func) {

@@ -4,10 +4,7 @@ import com.snap.survey.entity.SurveyEntity;
 import com.snap.survey.entity.UserEntity;
 import com.snap.survey.model.request.CreateSurveyRequest;
 import com.snap.survey.model.request.SubmitSurveyRequest;
-import com.snap.survey.model.response.CreateSurveyResponse;
-import com.snap.survey.model.response.QuestionResponse;
-import com.snap.survey.model.response.ResultSurveyResponse;
-import com.snap.survey.model.response.SurveyResponse;
+import com.snap.survey.model.response.*;
 import java.util.function.Function;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +25,8 @@ public interface SurveyService {
   SurveyEntity getBySlug(String slug);
 
   Long save(SurveyEntity survey);
+
+  Page<AnswerResultResponse> getResultResponse(String surveySlug, Pageable page);
 
   void update(Long surveyId, Function<SurveyEntity, SurveyEntity> func);
 

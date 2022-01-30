@@ -4,7 +4,6 @@ import com.snap.survey.exception.AppException;
 import com.snap.survey.model.ErrorType;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +13,6 @@ public class AppExceptionUtil {
 
   private final MessageUtil messageUtil;
 
-  @Autowired
   public AppExceptionUtil(MessageUtil messageUtil) {
     this.messageUtil = messageUtil;
   }

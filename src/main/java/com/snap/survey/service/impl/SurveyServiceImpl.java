@@ -5,17 +5,16 @@ import com.snap.survey.mapper.ChoiceMapper;
 import com.snap.survey.mapper.QuestionMapper;
 import com.snap.survey.model.request.CreateSurveyRequest;
 import com.snap.survey.model.request.SubmitSurveyRequest;
-import com.snap.survey.model.response.CreateSurveyResponse;
-import com.snap.survey.model.response.QuestionResponse;
-import com.snap.survey.model.response.ResultSurveyResponse;
-import com.snap.survey.model.response.SurveyResponse;
+import com.snap.survey.model.response.*;
 import com.snap.survey.repository.SurveyRepository;
 import com.snap.survey.service.*;
 import com.snap.survey.util.AppExceptionUtil;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -109,8 +108,31 @@ public class SurveyServiceImpl implements SurveyService {
     var survey = getBySlugAndUserId(surveySlug, userId);
     var isExpired = this.isExpire(survey.getExpireDate());
     var numberOfParticipants = answerService.getNumberOfParticipants(surveySlug);
-    var results = answerService.getResultResponse(survey.getSlug(), page);
+    var results = this.getResultResponse(survey.getSlug(), page);
     return new ResultSurveyResponse(survey.getTitle(), isExpired, results, numberOfParticipants);
+  }
+
+  @Override
+  public Page<AnswerResultResponse> getResultResponse(String surveySlug, Pageable page) {
+    var numberOfParticipants = answerService.getNumberOfParticipants(surveySlug);
+    return questionService
+        .getEntityBySurveySlug(surveySlug, page)
+        .map(
+            question -> {
+              List<AnswerChoiceResultResponse> answers =
+                  choiceService.getAllByQuestionId(question.getId()).stream()
+                      .map(
+                          choice -> {
+                            var numberParticipantsChoice =
+                                answerService.getNumberOfParticipantsChoice(
+                                    surveySlug, choice.getId());
+                            var percentage = numberParticipantsChoice * 100 / numberOfParticipants;
+                            return new AnswerChoiceResultResponse(
+                                choice.getNumber(), choice.getContent(), percentage);
+                          })
+                      .collect(Collectors.toList());
+              return new AnswerResultResponse(question.getId(), question.getContent(), answers);
+            });
   }
 
   @Transactional
