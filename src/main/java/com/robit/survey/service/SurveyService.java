@@ -5,7 +5,6 @@ import com.robit.survey.entity.UserEntity;
 import com.robit.survey.model.request.CreateSurveyRequest;
 import com.robit.survey.model.request.SubmitSurveyRequest;
 import com.robit.survey.model.response.*;
-import com.snap.survey.model.response.*;
 import java.util.function.Function;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

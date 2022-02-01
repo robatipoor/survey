@@ -7,7 +7,6 @@ import com.robit.survey.model.request.SubmitSurveyRequest;
 import com.robit.survey.model.response.*;
 import com.robit.survey.service.SurveyService;
 import com.robit.survey.util.BaseResponseUtil;
-import com.snap.survey.model.response.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;

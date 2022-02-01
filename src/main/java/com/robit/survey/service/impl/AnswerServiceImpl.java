@@ -9,8 +9,6 @@ import com.robit.survey.service.ChoiceService;
 import com.robit.survey.service.QuestionService;
 import com.robit.survey.service.UserService;
 import com.robit.survey.util.AppExceptionUtil;
-import com.snap.survey.entity.*;
-import com.snap.survey.service.*;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
