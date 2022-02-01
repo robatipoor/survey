@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.snap</groupId>
     <artifactId>survey</artifactId>
@@ -15,7 +15,7 @@
     <description>snap survey application</description>
     <properties>
         <java.version>17</java.version>
-        <spring.boot.version>2.6.2</spring.boot.version>
+        <spring.boot.version>2.6.3</spring.boot.version>
         <liquibase.version>4.6.1</liquibase.version>
         <postgresql.version>42.3.1</postgresql.version>
         <git-code-format-maven-plugin.version>3.3</git-code-format-maven-plugin.version>
